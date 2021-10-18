@@ -15,9 +15,9 @@
             <img src="{{url_for('static', filename='icons/GuapiLogo.svg')}}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
         </a>
         <nav class="menu">
-            <a href="/Home" class="menu-link"><i class= "fas fa-solid fas fa-home" ></i>Inicio</a>
-            <a href="/login" class="menu-link"><i class="fas fa-solid fas fa-sign-in-alt"></i>Ingresar</a>
-            <a href="/RegistroUsuario" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Registrar</a>
+            <a href="{{ url_for('Home') }}" class="menu-link"><i class= "fas fa-solid fas fa-home" ></i>Inicio</a>
+            <a href="{{ url_for('Login') }}" class="menu-link"><i class="fas fa-solid fas fa-sign-in-alt"></i>Ingresar</a>
+            <a href="{{ url_for('RegistroUsuario') }}" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Registrar</a>
         </nav>
     </header>
 

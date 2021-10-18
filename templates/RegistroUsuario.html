@@ -16,7 +16,7 @@
         </a>
         <nav class="menu">
             <a href="/Home" class="menu-link"><i class= "fas fa-solid fas fa-home" ></i>Inicio</a>
-            <a href="/login" class="menu-link"><i class="fas fa-solid fas fa-sign-in-alt"></i>Ingresar</a>
+            <a href="/Login" class="menu-link"><i class="fas fa-solid fas fa-sign-in-alt"></i>Ingresar</a>
             <a href="/RegistroUsuario" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Registrar</a>
         </nav>
     </header>
@@ -24,18 +24,19 @@
     <main>
     <main>
         <img src="{{url_for('static', filename='icons/group.svg')}}" alt="group.svg" class="group">
-        <form class="registrarUsuario" id="registrarUsuario" method="POST" action="">
+        <form class="registrarUsuario" id="registrarUsuario" method="POST" action="{{ url_for('RegistroUsuario') }}">
+            {{ form.hidden_tag() }}
             <h1>Registrarse</h1>
             <div class="form">
                 <div class="name-sur">
                     <label class="ns">
                         <span class="titulo">Nombres:</span>
-                        <input type="text" id="name">
+                        {{ form.nombre}}
                         <span class="warning" id="nameWarning"></span>
                     </label>
                     <label class="ns">
                         <span class="titulo">Apellidos:</span>
-                        <input type="text" id="surname">
+                        {{ form.apellido}}
                         <span class="warning" id="snameWarning"></span>
                     </label>
                 </div>
@@ -56,16 +57,22 @@
                     </label>
                     <label class="registrar">
                         <span class="titulo">Correo Electrónico:</span>
-                        <input type="email" id="email" placeholder="example@correo.com">
+                        {{ form.correo}}
                     </label> 
                     <span class="warning" id="e-Warning"></span>
+                    
+                    
                     <br>
                     <label class="registrar b">
                         <span class="titulo">Usuario:</span>
                         <input type="text" id="username" 
                             onfocus="mostrarReq('uReq','◦Tener mínimo 6 caractéres<br>◦Tener máximo 30 caractéres<br>◦Tener Números');"
                             onblur="mostrarReq('uReq', '')">
+                            {{form.usuario}}
                     </label> 
+                    
+                    
+                    
                     <span class="warning" id="uWarning"></span> <span class="requisitos" id="uReq"></span>
                     <label class="registrar b">
                         <span class="titulo">Contraseña:</span>
@@ -95,6 +102,12 @@
             <div class="buttons">
                 <button class="bRegistrar" id="bRegistrar" type="submit">Registrar</button>
                 <a class="bAtras" href="/Home">Atras</a>
+            </div>
+        </form>
+            <div class="grupo">
+                {% if mensaje %}
+                    {{ mensaje }}
+                {% endif %}
             </div>
         </form>
     </main>
