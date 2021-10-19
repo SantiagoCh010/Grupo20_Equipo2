@@ -1,12 +1,12 @@
 const bRegistrar = document.getElementById("bRegistrar");
 
-const nombre = document.getElementById("name");
-const apellido = document.getElementById("surname");
-const sexo = document.getElementById("sex");
-const cumpleaños = document.getElementById("birthday");
-const email = document.getElementById("email");
-const usuario = document.getElementById("username");
-const contraseña = document.getElementById("password");
+const nombre = document.getElementById("nombres");
+const apellido = document.getElementById("apellidos");
+const sexo = document.getElementById("sexo");
+const cumpleaños = document.getElementById("fecha_nacimiento");
+const email = document.getElementById("correo");
+const usuario = document.getElementById("usuarioID");
+const contraseña = document.getElementById("contrasena");
 const confirmarc = document.getElementById("pconfirmation");
 
 const nWarning = document.getElementById("nameWarning");

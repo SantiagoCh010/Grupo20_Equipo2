@@ -25,6 +25,7 @@ class FormReservaVuelo(FlaskForm):
     CodVuelo = IntegerField('Código del avión', validators=[validators.required(), validators.length(max=3), validators.regexp("^[0-9]*$")])
     enviar = SubmitField('Reservar')    
 
+'''
 class FormRegistro(FlaskForm):
     nombre = StringField('Nombre',validators=[validators.required(), validators.regexp("/^[A-Za-z]+$/")])
     apellido = StringField('Apellido',validators=[validators.required(), validators.regexp("/^[A-Za-z]+$/")])
@@ -34,7 +35,7 @@ class FormRegistro(FlaskForm):
     usuario = StringField('Usuario', validators=[validators.required(), validators.length(max=30, min=6) ])
     contrasena = PasswordField('Contraseña', validators=[validators.required(), validators.length(max=16, min=8)])
     confirmarContrasena = PasswordField('Validar Contraseña', validators=[validators.required(), validators.length(max=16, min=8)])
-    enviar = SubmitField('Registrar')
+    enviar = SubmitField('Registrar')'''
 
 class FormComentario(FlaskForm):
     UsuarioID = StringField('Usuario', validators=[validators.required(), validators.length(max=30, min=6) ])

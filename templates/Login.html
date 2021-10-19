@@ -25,17 +25,17 @@
 
     <main>
         <img src="{{url_for('static', filename='icons/user+.svg')}}" alt="user+.svg" class="user"/>
-        <form class="logUsuario" method="GET" action="">
+        <form class="logUsuario" method="POST" action="{{ url_for('Login') }}">
             <h1>Ingresar</h1>
             <div class="form">
                 <label class="ns">
                     <span class="titulo">Usuario:</span>
-                    <input type="text" id="userName">
+                    <input type="text" id="userName"name="userName">
                     <span class="warning" id="uWarning"></span>
                 </label>
                 <label class="ns">
                     <span class="titulo">Contraseña:</span>
-                    <input type="password" id="password">
+                    <input type="password" id="password"name="password">
                     <img src="{{url_for('static', filename='icons/eyeO.svg')}}" alt="ver" class="eye" id="peye" 
                          onmouseover="see_pword('eyeC', 'text')" onmouseleave="see_pword('eyeO', 'password')">
                     <span class="warning" id="pWarning"></span>
@@ -50,6 +50,11 @@
                         <a href="/Home" class="bLink">Atras</a>
                     </button>
                 </div>
+            </div>
+            <div class="grupo">
+                {% if mensaje %}
+                    {{mensaje}}
+                {% endif %}
             </div>
         </form>
     </main>

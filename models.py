@@ -1,4 +1,5 @@
 import bd
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class usuario():
     nombres = ''
@@ -8,6 +9,7 @@ class usuario():
     correo = ''
     usuarioID = ''
     contrasena = ''
+    tipoUsuario = 'Basico'
     
     def __init__(self, pnombres, papellidos, psexo, pfecha_nacimiento, pcorreo, pusuarioID, pcontrasena):
         self.nombres = pnombres
@@ -17,6 +19,7 @@ class usuario():
         self.correo = pcorreo
         self.usuarioID = pusuarioID
         self.contrasena = pcontrasena
+        #self.tipoUsuario = ptipousuario
 
     # Para esta función primero se debe colocar un boton de buscar en el template de edición de usuario del rol SuperAdmin, 
     # para saber cual de todos los ingresos es el que se quiere modificar 
@@ -35,7 +38,8 @@ class usuario():
     # como cuando un usuario nuevo se va a registrar
     def insertar(self):
         sql = "INSERT INTO usuario (nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?);"
-        afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
+        hashed_contrasena = generate_password_hash(self.contrasena, method="pbkdf2:sha256", salt_length=15)
+        afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, hashed_contrasena ])
         return (afectadas > 0)
 
     # Esta función sirve para que el SuperAdmin elimine un usuario
@@ -51,6 +55,24 @@ class usuario():
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
         return (afectadas > 0)
 
+    # Función para comprobar si la contraseña coincide y autorizar el login
+    def logearse(self):
+        sql = "SELECT * FROM usuario WHERE usuarioID = ?;"
+        obj = bd.ejecutar_select(sql, [self.usuarioID])
+        if obj:
+            if len(obj)>0:
+                if check_password_hash(obj[0]["contrasena"], self.contrasena):
+                    return True
+
+    #Classmethod para instanciar el usuario desde la base de datos
+    @classmethod
+    def cargar(cls, p_usuario):
+        sql = "SELECT nombres , apellidos, sexo, fecha_nacimiento, usuarioID, FROM usuario WHERE usuarioID = ?;"
+        obk = bd.ejecutar_select(sql,[p_usuario])
+        if obk:
+            if len(obk)>0:
+                return cls (obk[0]["nombres"], obk[0]["apellidos"], obk[0]["sexo"], obk[0]["fecha_nacimiento"], obk[0]["usuarioID"])
+        return None
 
 class piloto():
     cod_piloto = 0
@@ -245,4 +267,5 @@ class reservas():
         sql = "UPGRADE * SET reserva_vuelos cod_reserva, usuarioID, origen, destino, fecha_vuelo, num_personas, cod_vuelo) VALUES (?, ?, ?, ?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.cod_reserva, self.usuarioID, self.origen, self.destino, self.fecha_vuelo, self.num_personas, self.cod_vuelo ])
         return (afectadas > 0)
+
 

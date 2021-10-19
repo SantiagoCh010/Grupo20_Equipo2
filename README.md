@@ -13,4 +13,4 @@ Santiago Eliecer Charris Barros.
 
 Franklin Hernandez Natera.
 
-Nataly Imitola Rincón
+Nataly Imitola Rincón.
