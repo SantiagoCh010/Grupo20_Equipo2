@@ -13,7 +13,7 @@ class usuario():
     
     def __init__(self, pnombres, papellidos, psexo, pfecha_nacimiento, pcorreo, pusuarioID, pcontrasena):
         self.nombres = pnombres
-        self.papellidos = papellidos
+        self.apellidos = papellidos
         self.sexo = psexo
         self.fecha_nacimiento = pfecha_nacimiento
         self.correo = pcorreo
@@ -124,7 +124,6 @@ class piloto():
         afectadas = bd.ejecutar_insert(sql, [self.cod_piloto, self.nombres, self.apellidos, self.usuarioID, self.sexo, self.fecha_nacimiento, self.correo ])
         return (afectadas > 0)
 
-
 class super_Admin():
     nombres = ''
     apellidos = ''
@@ -174,7 +173,6 @@ class super_Admin():
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
         return (afectadas > 0)
 
-
 class comentario():
     num_comentario = 0
     usuarioID = ''
@@ -216,8 +214,6 @@ class comentario():
         afectadas = bd.ejecutar_insert(sql, [ self.num_comentario, self.usuarioID, self.cod_vuelo, self.comentario ])
         return (afectadas > 0)
 
-
-    
 class reservas():
     cod_reserva = 0
     usuarioID = ''
@@ -268,4 +264,54 @@ class reservas():
         afectadas = bd.ejecutar_insert(sql, [ self.cod_reserva, self.usuarioID, self.origen, self.destino, self.fecha_vuelo, self.num_personas, self.cod_vuelo ])
         return (afectadas > 0)
 
+class vuelo():
+    cod_vuelo = ''
+    cod_avion = ''
+    cod_piloto = ''
+    ciudad_origen = ''
+    ciudad_destino = ''
+    fecha_vuelo = ''
+    hora_vuelo = ''
+    estado = ''
 
+    def __init__(self, pcod_vuelo,pcod_avion,pcod_piloto,pciudad_origen,pciudad_destino,pfecha_vuelo,phora_vuelo,pestado):
+        self.cod_vuelo = pcod_vuelo
+        self.cod_avion = pcod_avion
+        self.cod_piloto = pcod_piloto
+        self.ciudad_origen = pciudad_origen
+        self.ciudad_destino = pciudad_destino
+        self.fecha_vuelo = pfecha_vuelo
+        self.hora_vuelo = phora_vuelo
+        self.estado = pestado
+
+    # Para esta función buscar un vuelo
+    @classmethod
+    def buscar(cls, pcod_reserva):
+        sql = "SELECT * FROM vuelos WHERE cod_vuelo = ?;"
+        resultado = bd.ejecutar_select(sql, [ pcod_reserva ])
+        if resultado:
+            if len(resultado)>0:
+                return cls(pcod_reserva, resultado[0]["cod_vuelo"],
+                            resultado[0]["pcod_avion"], resultado[0]["pcod_piloto"], 
+                            resultado[0]["pciudad_origen"],
+                            resultado[0]["pciudad_destino"],  resultado[0]["pfecha_vuelo"],
+                            resultado[0]["phora_vuelo"],  resultado[0]["pestado"])
+            return None
+    
+    # Esta función sirve insertar un vuelo
+    def insertar(self):
+        sql = "INSERT INTO vuelos ( cod_vuelo, cod_avion, cod_piloto, ciudad_origen, ciudad_destino, fecha_vuelo, hora_vuelo, estado ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
+        afectadas = bd.ejecutar_insert(sql, [ self.cod_vuelo  ,  self.cod_avion  ,  self.cod_piloto  ,  self.ciudad_origen  ,  self.ciudad_destino  ,  self.fecha_vuelo  ,  self.hora_vuelo, self.estado])
+        return (afectadas > 0)
+
+    # Esta función sirve para que el SuperAdmin elimine una reserva
+    def eliminar(self):
+        sql = "DELETE vuelos WHERE cod_vuelo = ?;"
+        afectadas = bd.ejecutar_insert(sql, [ self.cod_vuelo ])
+        return (afectadas > 0)
+
+    # Esta función sirve para que el SuperAdmin modifique una reserva, (favor verificar estas líneas)
+    def modificar(self):
+        sql = "UPGRADE * SET vuelos ( cod_vuelo, cod_avion, cod_piloto, ciudad_origen, ciudad_destino, fecha_vuelo, hora_vuelo ) VALUES (?, ?, ?, ?, ?, ?, ?);"
+        afectadas = bd.ejecutar_insert(sql, [ self.cod_vuelo  ,  self.cod_avion  ,  self.cod_piloto  ,  self.ciudad_origen  ,  self.ciudad_destino  ,  self.fecha_vuelo  ,  self.hora_vuelo])
+        return (afectadas > 0)

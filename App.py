@@ -14,8 +14,26 @@ def index():
 
 @app.route('/AgregarVuelo/', methods=["GET",'POST'])
 def AgregarVuelo():
-    return render_template('AgregarVuelo.html')
+        if request.method == "GET":
+        #formulario = FormRegistro()
+            return render_template('AgregarVuelo.html')    
+        else: 
+            if request.form:
+                cod_vuelo = request.form['vuelo']
+                ciudad_origen = request.form['origen']
+                ciudad_destino = request.form['destino']
+                fecha_vuelo = request.form['departure-D']
+                hora_vuelo = request.form['departure-H']
+                cod_piloto = request.form['pilotID']
+                cod_avion = request.form['airplane']
+                estado = "A tiempo"
 
+                obj_usuario = vuelo(cod_vuelo , ciudad_origen ,  ciudad_destino ,  fecha_vuelo , hora_vuelo , cod_piloto , cod_avion , estado)
+                if obj_usuario.insertar():
+                    return render_template('AgregarVuelo.html', mensaje="Se registró el usuario exitosamente.")
+
+                return render_template('AgregarVuelo.html', mensaje="Todos los datos son obligatorios.")
+    
 @app.route('/CambiarContraseña/', methods=["GET",'PUT'])
 def CambContraseña():
     return render_template('CambiarContraseña.html')
@@ -104,7 +122,7 @@ def RegistroUsuario():
         return render_template('RegistroUsuario.html')    
     else: 
 
-        ''' #La forma de hacerlo si tuvieras la validación del form
+        ''' #La forma de hacerlo si tuvieras la validación del formswtf
         formulario = FormRegistro(request.form)
         if formulario.validate_on_submit():
             return render_template('RegistroUsuario.html',mensaje="Registro exitoso.", form=formulario)
