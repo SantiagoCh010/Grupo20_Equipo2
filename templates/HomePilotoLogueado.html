@@ -30,42 +30,8 @@
                 <li> <img class="banner4" src="{{url_for('static', filename='imagenes/banner4.png')}}" alt="Banner" height="120%" width="100%"></li>
             </ul>
         </div>       
-        <form class="reservarVuelo" method="GET" action="">
-           <h2> Reserva Tu Vuelo</h2>
-           <div class="form">
-                <div class="org-des">
-                        <label class="org">
-                                <span class="titulo">O R I G E N</span>
-                                <div class="funcion">
-                                    <img src="{{url_for('static', filename='icons/search.svg')}}" alt="" width="24px" height="24px">
-                                    <input type="text" class="origen" name="origen">
-                                </div>
-                        </label>
-                        <label class="org">
-                                <span class="titulo">D E S T I N O</span>
-                                <div class="funcion">
-                                    <img src="{{url_for('static', filename='icons/search.svg')}}" alt="" width="24px" height="24px">
-                                    <input type="text" class="destino" name="destino">
-                                </div>
-                        </label>
-                    </div>
-                <label class="reservar">
-                    <span class="titulo">F  E C H A</span>
-                    <div class="funcion">
-                        <input type="date" class="fecha" name="fecha">
-                        </div>
-                </label>
-                <label class="reservar">
-                    <span class="titulo">P E R S O N A S</span>
-                    <div class="funcion">
-                        <img src="{{url_for('static', filename='icons/user.svg')}}" alt="" width="24px" height="24px">
-                        <input type="number" name="persona" class="persona" min="1" max="99">
-                        <span class="personas">personas</span>
-                        </div>
-                </label>
-                <button name="Buscar" class="submit">Buscar</button>
-            </div>
-        </form>
+        
+        <div class="separador"></div>
 
         <article class="OpcionesLista">
             <a href="/ItinerarioVuelo"><div class=" Opciones" id="Opcion1"><h2 class="TitulOp">Itinerario de vuelos</h2></div></a>
