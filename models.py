@@ -54,6 +54,13 @@ class usuario():
         sql = "UPDATE * SET usuario (nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
         return (afectadas > 0)
+    
+    # Método para cambiar la contraseña sin cambiar nada más
+    def modificarContra(cls, usuarios, contrasena):
+        sql = "UPDATE usuario SET contrasena = ? WHERE usuarioID = ?;"
+        hashed_contrasena = generate_password_hash(contrasena, method="pbkdf2:sha256", salt_length=15)
+        afectadas = bd.ejecutar_insert(sql, [ hashed_contrasena, usuarios])
+        return (afectadas > 0)    
 
     # Función para comprobar si la contraseña coincide y autorizar el login
     def logearse(self):
