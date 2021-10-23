@@ -40,7 +40,20 @@ def CambContraseña():
 
 @app.route('/Comentarios/', methods=["GET", "POST"])
 def Comentarios():
-    return render_template('ComentarioVuelos.html')
+    if request.method == "GET":
+        return render_template('ComentarioVuelos.html')
+    else:
+        if request.form:
+            usr = request.form["usuarioID"]
+            cod_vuelo = request.form["vuelo"]
+            comentario = request.form["comentario"]
+            numero = "usuarioID"
+
+            obj_comentario = comentarios(numero, usr,cod_vuelo, comentario)
+            if obj_comentario.insertar():
+                return redirect( url_for('HomeUser'))
+            
+            return render_template('ComentarioVuelos.html')    
 
 @app.route('/ConsultaVuelos/', methods=['GET'])
 def ConsultaVuelos():
