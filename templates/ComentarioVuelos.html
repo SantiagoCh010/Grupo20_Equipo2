@@ -23,6 +23,37 @@
         </nav>
     </header>
 
+    <form class="Comentarios" method="POST" action="{{ url_for('Comentarios') }}">
+        <div class="form">
+
+            <span class="warning" id="e-Warning"></span>
+            <br>
+            <label class="registrar b">
+                <span class="titulo">Usuario:</span>
+                <input type="text" placeholder="Usuario" name="usuarioID" id="usuarioID" 
+                    onfocus="mostrarReq('uReq','Coloca tu usuario');"
+                    onblur="mostrarReq('uReq', '')">
+            </label> 
+
+            <label class="crear b">
+                <span class="titulo">Código de Vuelo:</span>
+                <input type="text" name="vuelo" placeholder="ID vuelo">    
+            </label>
+            <span class="warning" name="vWarning"></span>
+
+            <label class="titulo">Dejanos tus Comentarios:</label>
+
+               <input type="textarea" name="comentario"id="comentario" placeholder="Nos interesa lo que piensas sobre tu vuelo, ¡escríbenos!">
+        </div>   
+        <div class="buttons">
+            <button class="bEnviar" type="submit">Enviar</button>
+            <button class="bAtras">
+                <a href="/HomeUser" class="bLink">Atras</a>
+            </button>
+        </div>
+    </form>
+
+    <!-- Dejo esta parte comentada porque ya no la vamos a usar, no es acorde a la base de datos y es más facil cambiar el html
     <main>        
         <form class="Comentarios" method="GET" action="">                 
             <div class="form">               
@@ -127,7 +158,7 @@
                 </button>
             </div>
         </form>
-    </main>
+    </main>-->
 
 </body>
 </html>
