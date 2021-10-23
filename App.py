@@ -47,7 +47,7 @@ def Comentarios():
             usr = request.form["usuarioID"]
             cod_vuelo = request.form["vuelo"]
             comentario = request.form["comentario"]
-            numero = "usuarioID"
+            numero = request.form["usuarioID"]
 
             obj_comentario = comentarios(numero, usr,cod_vuelo, comentario)
             if obj_comentario.insertar():
