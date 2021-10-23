@@ -173,7 +173,7 @@ class super_Admin():
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
         return (afectadas > 0)
 
-class comentario():
+class comentarios():
     num_comentario = 0
     usuarioID = ''
     cod_vuelo = 0
@@ -193,12 +193,12 @@ class comentario():
         resultado = bd.ejecutar_select(sql, [ pnum_comentario ])
         if resultado:
             if len(resultado)>0:
-                return cls(pnum_comentario, resultado[0]["usuarioID"], resultado[0]["cod_vuelos"], resultado[0]["comentario"])
+                return cls(pnum_comentario, resultado[0]["usuarioID"], resultado[0]["cod_vuelo"], resultado[0]["comentario"])
             return None
     
-    # Esta función sirve agregar un nuevo comentario
+    # Esta función sirve agregar un nuevo comentario 
     def insertar(self):
-        sql = "INSERT INTO comentarios (num_comentario, usuarioID, cod_vuelos, comentario) VALUES (?, ?, ?, ?);"
+        sql = "INSERT INTO comentarios (num_comentario, usuarioID, cod_vuelo, comentario) VALUES (?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.num_comentario, self.usuarioID, self.cod_vuelo, self.comentario ])
         return (afectadas > 0)
 
@@ -210,10 +210,11 @@ class comentario():
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un comentario, (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET comentarios (num_comentario, usuarioID, cod_vuelos, comentario) VALUES (?, ?, ?, ?);"
+        sql = "UPGRADE * SET comentarios (num_comentario, usuarioID, cod_vuelo, comentario) VALUES (?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.num_comentario, self.usuarioID, self.cod_vuelo, self.comentario ])
         return (afectadas > 0)
 
+    
 class reservas():
     cod_reserva = 0
     usuarioID = ''
