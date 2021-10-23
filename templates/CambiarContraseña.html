@@ -28,18 +28,23 @@
     </header>
 
     <main>
-        <form class="eUsuario" method="GET" action="">
+        <form class="eUsuario" method="POST" action="{{ url_for('CambContraseña') }}">
             <h1>Cambiar Contraseña</h1>
             <div class="form">
+                <label class="ns">
+                    <span class="titulo">Usuario:</span>
+                    <input type="text" name="usuarioID" id="usuarioID">
+                </label> 
                 <label class="ns">
                     <span class="titulo">Contraseña Anterior:</span>
                     <input type="password" name="password">
                     <img src="{{url_for('static', filename='icons/eyeO.svg')}}" alt="ver" class="eye">
                     <span class="warning" id="npWarning"></span>
                 </label>
+                <span class="warning" id="uWarning"></span> <span class="requisitos" id="uReq"></span>
                 <label class="ns">
                     <span class="titulo">Nueva Contraseña:</span>
-                    <input type="password" name="password"
+                    <input type="password" name="nueva" id="nueva"
                            onfocus="mostrarpReq('◦Tener mínimo 8 caractéres<br>◦Tener máximo 12 caractéres<br>◦Tener Números<br>◦Tener Mayúsculas y Minúsculas');"
                            onblur="mostrarpReq('')">
                     <img src="{{url_for('static', filename='icons/eyeO.svg')}}" alt="ver" class="eye">
@@ -61,3 +66,6 @@
         </form>
     </main>
 </body>
+<script type="text/javascript" src="{{url_for('static', filename='js/RUsuarioScript.js')}}"></script>
+<script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
+</html>
