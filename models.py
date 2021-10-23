@@ -51,7 +51,7 @@ class usuario():
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un usuario,
     # como cuando un usuario va a actualizar su información (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET usuario (nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?);"
+        sql = "UPDATE * SET usuario (nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
         return (afectadas > 0)
 
@@ -120,7 +120,7 @@ class piloto():
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un piloto, (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET piloto (cod_piloto, nombres, apellidos, usuarioID, sexo, fecha_nacimiento, correo) VALUES (?, ?, ?, ?, ?, ?, ?);"
+        sql = "UPDATE * SET piloto (cod_piloto, nombres, apellidos, usuarioID, sexo, fecha_nacimiento, correo) VALUES (?, ?, ?, ?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [self.cod_piloto, self.nombres, self.apellidos, self.usuarioID, self.sexo, self.fecha_nacimiento, self.correo ])
         return (afectadas > 0)
 
@@ -169,7 +169,7 @@ class super_Admin():
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un usuario_superAdmin, (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET super_administrador (nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?);"
+        sql = "UPDATE * SET super_administrador (nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, self.contrasena ])
         return (afectadas > 0)
 
@@ -210,7 +210,7 @@ class comentarios():
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un comentario, (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET comentarios (num_comentario, usuarioID, cod_vuelo, comentario) VALUES (?, ?, ?, ?);"
+        sql = "UPDATE * SET comentarios (num_comentario, usuarioID, cod_vuelo, comentario) VALUES (?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.num_comentario, self.usuarioID, self.cod_vuelo, self.comentario ])
         return (afectadas > 0)
 
@@ -261,7 +261,7 @@ class reservas():
 
     # Esta función sirve para que el SuperAdmin modifique una reserva, (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET reserva_vuelos cod_reserva, usuarioID, origen, destino, fecha_vuelo, num_personas, cod_vuelo) VALUES (?, ?, ?, ?, ?, ?, ?);"
+        sql = "UPDATE * SET reserva_vuelos cod_reserva, usuarioID, origen, destino, fecha_vuelo, num_personas, cod_vuelo) VALUES (?, ?, ?, ?, ?, ?, ?);"
         afectadas = bd.ejecutar_insert(sql, [ self.cod_reserva, self.usuarioID, self.origen, self.destino, self.fecha_vuelo, self.num_personas, self.cod_vuelo ])
         return (afectadas > 0)
 
@@ -313,6 +313,6 @@ class vuelo():
 
     # Esta función sirve para que el SuperAdmin modifique una reserva, (favor verificar estas líneas)
     def modificar(self):
-        sql = "UPGRADE * SET vuelos ( cod_vuelo, cod_avion, cod_piloto, ciudad_origen, ciudad_destino, fecha_vuelo, hora_vuelo ) VALUES (?, ?, ?, ?, ?, ?, ?);"
-        afectadas = bd.ejecutar_insert(sql, [ self.cod_vuelo  ,  self.cod_avion  ,  self.cod_piloto  ,  self.ciudad_origen  ,  self.ciudad_destino  ,  self.fecha_vuelo  ,  self.hora_vuelo])
+        sql = "UPDATE vuelos SET cod_vuelo = ?, cod_avion = ?, cod_piloto = ?, ciudad_origen = ?, ciudad_destino = ?, fecha_vuelo = ?, hora_vuelo = ?, estado = ? WHERE cod_vuelo = ? ;"
+        afectadas = bd.ejecutar_insert(sql, [ self.cod_vuelo  , self.cod_avion  ,  self.cod_piloto  ,  self.ciudad_origen  ,  self.ciudad_destino  ,  self.fecha_vuelo  ,  self.hora_vuelo, self.estado, self.cod_vuelo  ])
         return (afectadas > 0)
