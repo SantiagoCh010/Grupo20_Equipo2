@@ -28,7 +28,7 @@ def AgregarVuelo():
                 cod_avion = request.form['airplane']
                 estado = "A tiempo"
 
-                obj_usuario = vuelo(cod_vuelo , ciudad_origen ,  ciudad_destino ,  fecha_vuelo , hora_vuelo , cod_piloto , cod_avion , estado)
+                obj_usuario = vuelo(cod_vuelo , cod_avion , cod_piloto , ciudad_origen ,  ciudad_destino ,  fecha_vuelo , hora_vuelo , estado)
                 if obj_usuario.insertar():
                     return render_template('AgregarVuelo.html', mensaje="Se registró el usuario exitosamente.")
 
@@ -67,9 +67,26 @@ def EdicionUsuario():
 def EditarUsuario():
     return render_template('EditarUsuario.html')
 
-@app.route('/EditarVuelo/', methods=["GET",'PUT'])
+@app.route('/EditarVuelo/', methods=["GET",'PUT','POST'])
 def EditarVuelo():
-    return render_template('EditarVuelo.html')
+        if request.method == "GET":
+            return render_template('EditarVuelo.html')    
+        else: 
+            if request.form:
+                cod_vuelo = request.form['vuelo']
+                ciudad_origen = request.form['origen']
+                ciudad_destino = request.form['destino']
+                fecha_vuelo = request.form['departure-D']
+                hora_vuelo = request.form['departure-H']
+                cod_piloto = request.form['pilotID']
+                cod_avion = request.form['airplane']
+                estado = request.form['estado']
+
+                obj_usuario = vuelo(cod_vuelo , cod_avion , cod_piloto , ciudad_origen ,  ciudad_destino ,  fecha_vuelo , hora_vuelo , estado)
+                if obj_usuario.modificar():
+                    return render_template('EditarVuelo.html')
+
+                return render_template('EditarVuelo.html')
 
 @app.route('/EliminarUser/', methods=["GET",'DELETE'])
 def EliminarUser():
