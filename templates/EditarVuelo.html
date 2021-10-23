@@ -26,39 +26,42 @@
     <main>
         <img src="{{url_for('static', filename='imagenes/avionmedio.png')}}" alt="avion" class="avion"/>
         
-        <form class="EdiVuelos" method="GET" action="">         
+        <form class="EdiVuelos" method="POST" action="{{ url_for('EditarVuelo') }}">         
             <h1 class="titulos">Edición de vuelos</h1>            
             
 
                 <div class="agrupados">
                     <label class="titulo">Código del vuelo:</label>
-                    <input id="txtcodigoVuelo" type="text" name="codigoVuelo" placeholder="ID vuelo" title="codigoVuelo" class="camposTexto"/>
+                    <input id="txtcodigoVuelo" type="text" name="vuelo" placeholder="ID vuelo" title="codigoVuelo" class="camposTexto"/>
                     <br><br>
                     <label class="titulo">Código del avión:</label>
-                    <input id="txtcodigoAvion" type="text" name="codigoAvion" placeholder="ID vuelo" title="codigoAvion"
+                    <input id="txtcodigoAvion" type="text" name="airplane" placeholder="ID vuelo" title="codigoAvion"
                         class="camposTexto" />
                     <br><br>
                     <label class="titulo">Código del piloto:</label>
-                    <input class="camposTexto" id="txtcodigoPiloto" type="text" name="txtcodigoPiloto"
+                    <input class="camposTexto" id="txtcodigoPiloto" type="text" name="pilotID"
                         placeholder="ID Piloto" title="codigoPiloto" />
                         <br><br>
                     <label class="titulo">Ciudad de origen:</label>
-                    <input id="txtciudadOrigen" type="text" name="usuario" placeholder="Ciudad de origen"
+                    <input id="txtciudadOrigen" type="text" name="origen" placeholder="Ciudad de origen"
                         title="ciudadOrigen" class="camposTexto" />
                     <br><br>
                     <label class="titulo">Ciudad de destino:</label>
-                    <input class="camposTexto" id="txtciudadDestino" type="text" name="ciudadDestino"
+                    <input class="camposTexto" id="txtciudadDestino" type="text" name="destino"
                         placeholder="Ciudad de destino" title="apellidos" />
                     <br><br>
                     <label class="titulo">Fecha de salida:</label>
-                    <input class="camposTexto" type="date" id="birthday" name="nacimiento">
+                    <input class="camposTexto" type="date" id="birthday" name="departure-D">
                     <br><br>
 
                     <label class="titulo">Hora de salidad:</label>
-                    <input class="camposTexto" id="txthoraSalida" type="time" name="horaSalida" placeholder="00:00"
+                    <input class="camposTexto" id="txthoraSalida" type="time" name="departure-H" placeholder="00:00"
                         title="horaSalida" />
                     <br><br>
-
+                    <label class="titulo">Estado del vuelo:</label>
+                    <input class="camposTexto" id="txtestado" type="text" name="estado"
+                        placeholder="A tiempo" title="estado" />
+                    <br><br>
 
                 </div>
                 <br><br>
