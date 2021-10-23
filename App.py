@@ -34,9 +34,21 @@ def AgregarVuelo():
 
                 return render_template('AgregarVuelo.html', mensaje="Todos los datos son obligatorios.")
     
-@app.route('/CambiarContraseña/', methods=["GET",'PUT'])
+@app.route('/CambiarContraseña/', methods=["GET",'PUT', 'POST'])
 def CambContraseña():
-    return render_template('CambiarContraseña.html')
+    if request.method == "GET":
+        return render_template('CambiarContraseña.html')    
+    else: 
+        if request.form:
+            usuarioID = request.form['usuarioID']
+            contrasena = request.form['password']
+            obj_usuario = usuario('','','','','',usuarioID,contrasena)
+            if obj_usuario.logearse():
+                nuevaContrasena = request.form['nueva']
+                if obj_usuario.modificarContra(usuarioID, nuevaContrasena):
+                    return render_template('HomeUsuarioLogueado.html')
+
+            return render_template('HomeUsuarioLogueado.html')
 
 @app.route('/Comentarios/', methods=["GET", "POST"])
 def Comentarios():
