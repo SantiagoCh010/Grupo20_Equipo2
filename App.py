@@ -100,9 +100,39 @@ def EditarVuelo():
 
                 return render_template('EditarVuelo.html')
 
-@app.route('/EliminarUser/', methods=["GET",'DELETE'])
+@app.route('/EliminarUser/', methods=["GET",'POST'])
 def EliminarUser():
-    return render_template('EliminarUser.html')
+    if request.method == "GET":
+        return render_template('EliminarUser.html')
+    else:
+        if request.form:
+            nombreDeUsuario = request.form["userName"]
+            email = request.form["email"]
+            password = request.form["password"]
+            comentario = request.form["comentario"]
+
+            error = ""
+            exito = ""
+
+            if not isUsernameValid(nombreDeUsuario):
+                error+= "Debe escribir un nombre de usuario valido. "
+            
+            if not isEmailValid(email):
+                error += "Debe escribir un email valido. "
+
+            if not isPasswordValid(password):
+                error += "Contraseña Incorrecta"           
+            
+            if not error:                             
+                usuarioBorrado = usuario.eliminarPorValores(nombreDeUsuario, email, password)  
+                if (usuarioBorrado ):                  
+                    yag = yagmail.SMTP("alertaeropuertojuancaseano@gmail.com","Equipo2_alert") 
+                    yag.send(to=email, subject="Alerta usuario eliminado", contents= "El usuario " + nombreDeUsuario + " fue eliminado con exito.") 
+                    return redirect (url_for("HomeAdministrador"))
+                else:
+                    return render_template("EliminarUser.html", errores = "Usuario no encontrado")
+            else:
+                return render_template("EliminarUser.html", errores = error)
 
 @app.route('/EliminarVuelo/', methods=["GET",'DELETE'])
 def EliminarVuelo():
