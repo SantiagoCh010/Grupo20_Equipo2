@@ -42,11 +42,11 @@ class usuario():
         afectadas = bd.ejecutar_insert(sql, [ self.nombres, self.apellidos, self.sexo, self.fecha_nacimiento, self.correo, self.usuarioID, hashed_contrasena ])
         return (afectadas > 0)
 
-    # Esta función sirve para que el SuperAdmin elimine un usuario
-    def eliminar(self):
-        sql = "DELETE usuario WHERE usuarioID = ?;"
-        afectadas = bd.ejecutar_insert(sql, [ self.usuarioID ])
-        return (afectadas > 0)
+    def eliminarPorValores(pusuario, pemail, pcontrasena):
+        sql = '''DELETE FROM usuario WHERE UsuarioID = ? AND correo = ? AND contrasena = ?'''
+        hashed_contrasena = generate_password_hash(pcontrasena, method="pbkdf2:sha256", salt_length=15)
+        afectadas = bd.ejecutar_insert(sql, [pusuario, pemail, hashed_contrasena])
+        return ( afectadas > 0 )
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un usuario,
     # como cuando un usuario va a actualizar su información (favor verificar estas líneas)
