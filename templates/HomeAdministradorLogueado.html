@@ -66,6 +66,45 @@
                 <button name="Buscar" class="submit">Buscar</button>
             </div>
         </form>
+        
+        <div class="resultadoBusqueda">
+            {% if lista %}
+                <div>
+                    <table class="itinerarioTabla">
+                        <tr>
+                            <th>Codigo del vuelo</th>
+                            <th>Codigo del avión</th>
+                            <th>Codigo del piloto</th>
+                            <th>Ciudad de origen</th>
+                            <th>Ciudad de destino</th>
+                            <th>Fecha de Salida</th>
+                            <th>Hora de Partida</th>                    
+                            <th>Estado</th>                    
+                        </tr>
+                        {% for item in lista %}
+                            <tr>
+                                <td>{{ item.cod_vuelo}}</td>
+                                <td>{{ item.cod_avion}}</td>
+                                <td>{{ item.cod_piloto}}</td>
+                                <td>{{ item.ciudad_origen}}</td>
+                                <td>{{ item.ciudad_destino}}</td>
+                                <td>{{ item.fecha_vuelo}}</td>
+                                <td>{{ item.hora_vuelo}}</td>
+                                <td>{{ item.estado}}</td>    
+                               <td><a href="">Reservar</a></td>         
+                            </tr>
+                        {% endfor %}
+                    </table>
+               </div>   
+            {% else %} 
+               <h2 style="color: red;">Vuelos no encontrados</h2>
+            {% endif %}
+
+            {% if error %}
+                <h2 style="color: red;">{{error}}</h2>
+            {% endif %}
+            
+        </div>
 
         <article class="OpcionesLista">            
             <a href="/AgregarVuelo"><div class=" Opciones" id="Opcion1"><h2 class="TitulOp">Creación de vuelos</h2></div></a>
