@@ -144,7 +144,42 @@ def Home():
 
 @app.route('/HomeAdministrador/', methods=['GET','POST'])
 def HomeAdministrador():
-    return render_template('HomeAdministradorLogueado.html')
+    if request.method == "GET":
+        print("1")
+        return render_template('HomeAdministradorLogueado.html')
+    else:
+        print("2")
+        if request.form:            
+            busquedaOrigen = request.form["BsOrigen"]
+            busquedaDestino = request.form["BsDestino"]
+            busquedaFecha = request.form["BsFecha"]
+            busquedaNumeroPersonas = request.form["BsPersona"]
+            error = ""                       
+
+            if len(busquedaOrigen)< 4:
+                error= "-Debe escribir un lugar de origen valido- "
+            
+            if len(busquedaDestino)<4:
+                error += "-Debe escribir un lugar de destino valido- "
+            
+            if len(busquedaFecha)<2:
+                error +="-Debe escribir una fecha valida- "                
+            
+            if len(busquedaNumeroPersonas)<1:
+                error +="-El numero de personas debe ser mayor de cero- "
+            
+            if not error:                
+                BusquedaVuelo = vuelo.buscarPorHome(busquedaOrigen, busquedaDestino, busquedaFecha) 
+                print(BusquedaVuelo)               
+                if (BusquedaVuelo):    
+                    print("Vuelos encontrados")                                  
+                    return render_template('HomeAdministradorLogueado.html', lista = BusquedaVuelo) 
+                else:
+                    print("Vuelos no encontrados")                    
+                    return render_template('HomeAdministradorLogueado.html', lista = BusquedaVuelo) 
+            else:
+                print(error)   
+                return render_template('HomeAdministradorLogueado.html', error = error)  
 
 @app.route('/HomePiloto/', methods=['GET','POST'])
 def HomePiloto():
