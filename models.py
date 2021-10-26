@@ -305,6 +305,16 @@ class vuelo():
                             resultado[0]["pciudad_destino"],  resultado[0]["pfecha_vuelo"],
                             resultado[0]["phora_vuelo"],  resultado[0]["pestado"])
             return None
+        
+     #Para buscar desde el panel de administrador
+    def buscarPorHome(pciudadOrigen, pciudadDestino, pfechaVuelo):
+        sql = "SELECT * FROM vuelos WHERE ciudad_origen = ? AND ciudad_destino = ? AND fecha_vuelo = ?;"
+        busqueda = bd.ejecutar_select(sql, [pciudadOrigen, pciudadDestino, pfechaVuelo])        
+        if busqueda:
+            return busqueda
+            if len(busqueda)>0:
+                return busqueda
+        return None
     
     # Esta función sirve insertar un vuelo
     def insertar(self):
