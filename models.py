@@ -316,6 +316,15 @@ class vuelo():
                 return busqueda
         return None
     
+    def buscarItinerario(pcodigoPiloto):
+        sql = "SELECT * FROM vuelos WHERE cod_piloto= ?;"
+        busqueda = bd.ejecutar_select(sql, [pcodigoPiloto])        
+        if busqueda:
+            return busqueda
+            if len(busqueda)>0:
+                return busqueda
+        return None
+    
     # Esta función sirve insertar un vuelo
     def insertar(self):
         sql = "INSERT INTO vuelos ( cod_vuelo, cod_avion, cod_piloto, ciudad_origen, ciudad_destino, fecha_vuelo, hora_vuelo, estado ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
