@@ -153,7 +153,7 @@ h1 {
     align-items: center;
 }
 
-.bEditar, .bCambiarP {
+.bconsultar{
     background-color: var(--Lapizlazuli);
     border-radius: 50px;
     border: none;
@@ -161,16 +161,8 @@ h1 {
     color: var(--MintCream);
 }
 
-.bCambiarP {
-    width: 465px;
-}
 
-.bEditar:hover{
-    background-color: #068dee
-
-}
-
-.bCambiarP:hover{
+.bconsultar:hover{
     background-color: #068dee
 
 }
