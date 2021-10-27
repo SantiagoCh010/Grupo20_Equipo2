@@ -199,8 +199,26 @@ def InfoUser():
 
 @app.route('/ItinerarioVuelo/', methods=['GET'])
 def ItinerarioVuelo():
-    return render_template('ItinerarioVuelo.html')
+    if request.method == "GET":        
+        return render_template('ItinerarioVuelo.html')
+    else:        
+        if request.form:            
+            busquedaCodPiloto = request.form["codPiloto"]            
+            error = ""                       
 
+            if len(busquedaCodPiloto)< 1:
+                error= "Debes ingresar el codigo del piloto"    
+                        
+            if not error:                
+                BusquedaVuelo = vuelo.buscarItinerario(busquedaCodPiloto)
+                print(BusquedaVuelo)               
+                if (BusquedaVuelo):                                                     
+                    return render_template('ItinerarioVuelo.html', lista = BusquedaVuelo) 
+                else:                                       
+                    return render_template('ItinerarioVuelo.html', lista = BusquedaVuelo) 
+            else:                  
+                return render_template('ItinerarioVuelo.html', error = error) 
+            
 @app.route('/Login/', methods=['POST','GET'])
 def Login():
     if request.method == "GET":
