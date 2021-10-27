@@ -49,21 +49,34 @@
                         <th>Fecha de Salida</th>
                         <th>Estado</th>                    
                     </tr>
-                    <tr>
-                        <td>--</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-
-                    </tr>
+                    {% if lista %}
+                        {% for item in lista %}
+                            <tr>
+                                <td>{{ item.cod_vuelo}}</td>
+                                <td>{{ item.cod_avion}}</td>
+                                <td>{{ item.ciudad_origen}}</td>
+                                <td>{{ item.ciudad_destino}}</td>
+                                <td>{{ item.hora_vuelo}}</td>
+                                <td>{{ item.fecha_vuelo}}</td>
+                                <td>{{ item.estado}}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                            <tr>
+                                    <td colspan="7"> Vuelos no encontrados</td>
+                            </tr>
+                    {% endif %}
+                    {% if error %}
+                        <tr>
+                            <td colspan="7">{{error}}</td>
+                        </tr>
+                    {% endif %}
                 </table>
                 
                 
             </div>
-            <div class="buttons">                
+            <div class="buttons">    
+                <button name= "consultarVueloPiloto" class="bconsultar" type="submit">Consultar</button>     
                 <button class="bAtras">
                     <a href="/HomePiloto" class="bLink">Atras</a>
                 </button>
