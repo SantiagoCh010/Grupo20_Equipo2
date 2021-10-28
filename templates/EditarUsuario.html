@@ -1,80 +1,77 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edición</title>
-    <link rel="icon" type="svg" href="{{url_for('static', filename='icons/Logo.svg')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/EdUsuarioStyle.css')}}">
-</head>
-<body>
-    
-    <header class="page-head">
-        <a href="/HomeAdministrador" class="logo">
-            <img src="{{url_for('static', filename='icons/GuapiLogo.svg')}}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
-        </a>
-        <nav class="menu">
-            <a href="#" class="menu-link"></a>
-            <a href="#" class="menu-link"></a>
-            <a href="/HomeAdministrador" class="menu-link">
-                Name Surname
-                <img src="{{url_for('static', filename='icons/user.svg')}}" alt="user">
-                <span>BIENVENIDO,</span>
-            </a>
-        </nav>
-    </header>
+{% extends 'Template.html' %}
+{% block style %}
+    <title>Perfil</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/EditarStyle.css') }}">
+{% endblock %}
 
-    <main>
-        <img src="{{url_for('static', filename='imagenes/placeholder-square.jpg')}}" alt="user.svg" class="user">
-        <form class="editarUsuario" method="GET" action="" onsubmit="">
-            <h1>Editar Usuario</h1>
+{% block main %}
+<main>
+    <form class="edicionUsuario" method="POST" enctype="multipart/form-data" action="{{ url_for('editar_usuario',  usuario = item.usuario) }}">
+        <div class="user profile-pic">
+            <img src="{{url_for('static', filename='profile_pics/' + item['img_profile'] )}}" id="profile-pic" width="200" />
+            <label class="overlay">
+                <span>Editar Imagen de Perfil</span>
+                <input id="file" name="profile_file" type="file" onchange="loadFile(event)"/>
+            </label>
+        </div>
+        <div class="editarUsuario">
+            <h1>Editar Perfil</h1>
+            {% if g.usertype != 'usuario' %}
+                <h3>{{ item.usertype }}</h3>
+            {% endif %}
             <div class="form">
                 <div class="name-sur">
-                    <label class="ns">
-                        <span class="titulo">Nombres:</span>
-                        <input type="text" name="name">
+                    <label class="editar div">
+                        <span class="titulo">Nombre:</span>
+                        <input type="text" name="name" id="name" placeholder="{{ item.nombre }}" value="{{ item.nombre }}">
                     </label>
-                    <label class="ns">
-                        <span class="titulo">Apellidos:</span>
-                        <input type="text" name="surname">
+                    <label class="editar div">
+                        <span class="titulo">Apellido:</span>
+                        <input type="text" id="surname" name="surname" placeholder="{{ item.apellido }}" value="{{ item.apellido }}">
                     </label>
                 </div>
-                <br>
-                <label class="registrar">
-                    <span class="titulo">Usuario:</span>
-                    <input type="text" name="username">
+                <div class="user-contraseña">
+                    <label class="editar userName">
+                        <span class="titulo">Usuario:</span>
+                        <input type="text" id="username" name="username" placeholder="{{ item.usuario }}" value="{{ item.usuario }}"
+                        onfocus="mostrarReq('uReq','◦Tener mínimo 6 caractéres<br>◦Tener máximo 30 caractéres<br>◦Tener Números');"
+                        onblur="mostrarReq('uReq', '')"> 
+                    </label>
+                    <a href="CambiarContraseña.html" class="b Contraseña">Cambiar Contraseña</a>
+                </div>
+                <label class="editar">
+                    <span class="titulo">Correo Electronico:</span>
+                    <input type="text" id="email" name="email" placeholder="{{ item.email }}" value="{{ item.email }}">
                 </label>
-                <a href="/CambiarContraseña" class="registrar">
-                    <button class="bCambiarP" type="button">Cambiar Contraseña</button>
-                </a>
+                <span class="warning" id="e-Warning"></span>
                 <br>
-                <label class="registrar">
+                <label class="editar">
+                    <span class="titulo">Fecha de Nacimiento:</span>
+                    <input type="date" id="birthday" name="birthday" value="{{ item.fecha_nacimiento }}">
+                </label>
+                <label class="editar">
                     <span class="titulo">Sexo:</span>
-                    <select name="sex">
-                        <option value="" selected>--Seleciona tu sexo--</option>
+                    <select id="sex" name="sex">
                         <option value="masculino">Masculino</option>
                         <option value="femenino">Femenino</option>
-                        <option value="null">Prefiero no decir</option>
+                        <option value="noDefinido">Prefiero no decir</option>
                     </select>
                 </label>
-                <label class="registrar">
-                    <span class="titulo">Fecha de Nacimiento:</span>
-                    <input type="date" name="birthday">
-                </label>
-                <label class="registrar">
-                    <span class="titulo">Correo Electrónico:</span>
-                    <input type="email" name="email" placeholder="example@correo.com">
-                </label>
             </div>
+            <input type="hidden" value="{{ item.sexo }}" id=sexo>
             <div class="buttons">
-                <button class="bEditar" type="submit">Editar</button>
-                <button class="bAtras">
-                    <a href="/HomeAdministrador" class="bLink">Atras</a>
-                </button>
+                <button class="b Editar" id="bEditar">Editar</button>
+                {% if g.usertype != 'usuario' %}
+                    <a href="{{ url_for('informacion_admin', user=item.usuario) }}" class="b Atras">Atras</a>
+                {% else %}
+                    <a href="{{ url_for('informacion')}}" class="b Atras">Atras</a>
+                {% endif %}
             </div>
-        </form>
-    </main>
+        </div>
+    </form>
+</main>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/EditarUsuarioScript.js') }}"></script>
+{% endblock %}
