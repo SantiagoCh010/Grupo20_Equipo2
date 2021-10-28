@@ -1,0 +1,102 @@
+{% extends 'Template.html' %}
+{% block style %}
+    <title>Registro</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/RegistrarStyle.css') }}">
+{% endblock %}
+
+{% block main %}
+<main>
+    <img src="{{ url_for('static', filename='icons/group.svg') }}" alt="group.svg" class="group">
+    <form class="registrarUsuario" id="registrarUsuario" method="POST" action="{{ url_for('registrar') }}">
+        <h1>Registrarse</h1>
+        {% with warnings = get_flashed_messages() %}
+            {% if warnings %}
+                {% for warnings in warnings %}
+                    <p class="flash">
+                        {{ warnings }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="form">
+            <div class="name-sur">
+                <label class="ns">
+                    <span class="titulo">Nombres:</span>
+                    <input type="text" id="name" name="name">
+                    <span class="warning" id="nameWarning"></span>
+                </label>
+                <label class="ns">
+                    <span class="titulo">Apellidos:</span>
+                    <input type="text" id="surname" name="surname">
+                    <span class="warning" id="snameWarning"></span>
+                </label>
+            </div>
+            <label class="registrar">
+                <span class="titulo">Sexo:</span>
+                <select id="sex" name="sex" onmousedown="changeMargin('60px')" onmouseleave="changeMargin('0px')">
+                    <option value="z" selected disabled hidden>--Seleciona tu sexo--</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="noDefinido">Prefiero no decir</option>
+                </select>
+            </label>
+            <div class="form aftersex">
+                <span class="warning" id="sexWarning"></span>
+                <label class="registrar">
+                    <span class="titulo">Fecha de Nacimiento:</span>
+                    <input type="date" id="birthday" name="birthday">
+                </label>
+                <label class="registrar">
+                    <span class="titulo">Correo Electrónico:</span>
+                    <input type="email" id="email" name="email" placeholder="example@correo.com">
+                </label> 
+                <span class="warning" id="e-Warning"></span>
+                <br>
+                <label class="registrar b">
+                    <span class="titulo">Usuario:</span>
+                    <input type="text" id="username" name="username"
+                        onfocus="mostrarReq('uReq','◦Tener mínimo 6 caractéres<br>◦Tener máximo 30 caractéres<br>◦Tener Números');"
+                        onblur="mostrarReq('uReq', '')">
+                </label> 
+                <span class="warning" id="uWarning">
+                    {% if warning %}
+                        {{ warning }}
+                    {% endif %}
+                </span> <span class="requisitos" id="uReq"></span>
+                <label class="registrar b">
+                    <span class="titulo">Contraseña:</span>
+                    <input type="password" id="password" name="password"
+                        onfocus="mostrarReq('pReq','◦Tener mínimo 8 caractéres<br>◦Tener máximo 16 caractéres<br>◦Tener Números<br>◦Tener Mayúsculas y Minúsculas');"
+                        onblur="mostrarReq('pReq', '')">
+                    <img src="{{ url_for('static', filename='icons/eyeO.svg') }}" alt="ver" class="eye" id="peye">
+                    <input id="hiPassword" type="hidden" value="{{ url_for('static', filename='icons/eyeC.svg') }}" />
+                </label> 
+                <span class="warning" id="pWarning"></span> <span class="requisitos" id="pReq"></span>
+                <label class="registrar b">
+                    <span class="titulo">Confirmar Contraseña:</span>
+                    <input type="password" id="pconfirmation" name="pconfirmation">
+                    <img src="{{ url_for('static', filename='icons/eyeO.svg') }}" alt="ver" class="eye" id="pceye">
+                    <input id="hiCPassword" type="hidden" value="{{ url_for('static', filename='icons/eyeC.svg') }}" />
+                </label> 
+                <span class="warning" id="pcWarning"></span>
+            </div>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" value="checked" id="TeC" name="TeC" class="check">
+            <label for="TeC" class="check">
+                Acepta los <a href="" class="T-C">Términos y Condiciones</a>
+            </label>
+            <span class="warning" id="TCWarning"></span>
+        </div>
+        <div class="buttons">
+            <button class="bRegistrar" id="bRegistrar" type="submit">Registrar</button>
+            <a class="bAtras" href="{{ url_for('home') }}">Atras</a>
+        </div>
+    </form>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/RUsuarioScript.js') }}"></script>
+<script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
+{% endblock %}
