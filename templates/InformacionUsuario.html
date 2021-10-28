@@ -1,82 +1,78 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información</title>
-    <link rel="icon" type="svg" href="{{url_for('static', filename='icons/Logo.svg')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/InformacionUsuarioStyle.css')}}">
-</head>
-<body>
-    
-    <header class="page-head">
-        <a href="/HomeUsuario" class="logo">
-            <img src="{{url_for('static', filename='icons/GuapiLogo.svg')}}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
-        </a>
-        <nav class="menu">
-            <a href="#" class="menu-link"></a>
-            <a href="#" class="menu-link"></a>
-            <a href="/InfoUser" class="menu-link">
-                Name Surname
-                <img src="{{url_for('static', filename='icons/user.svg')}}" alt="user">
-                <span>BIENVENIDO,</span>
-            </a>
-        </nav>
-    </header>
+{% extends 'Template.html' %}
+{% block style %}
+    <title>Perfil</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/InformacionStyle.css') }}">
+{% endblock %}
 
-    <main>
-        <img src="{{url_for('static', filename='imagenes/placeholder-square.jpg')}}" alt="user.svg" class="user">
-        <form class="editarUsuario" method="GET" action="" onsubmit="">
-            <h1>Información del Usuario</h1>
-            <div class="form">
-                
-                <label class="ns">
-                    <span class="titulo">Nombres:</span>
-                    <input type="text" name="name" readonly>
-                </label>
-                <label class="ns">
-                    <span class="titulo">Apellidos:</span>
-                    <input type="text" name="surname" readonly>
-                </label>          
-                
-                <label class="registrar">
-                    <span class="titulo">Nombre de Usuario:</span>
-                    <input type="text" name="username" readonly>
-                </label>
+{% block main %}
+<main>
+    <img src="{{url_for('static', filename='profile_pics/' + item['img_profile'] )}}" alt="user.svg" class="user">
+    <form class="informacionUsuario" method="GET">
+        {% with successes = get_flashed_messages(category_filter=["success"]) %}
+            {% if successes %}
+                {% for success in successes %}
+                    <p class="success">
+                        {{ success }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+            {% if errors %}
+                {% for error in errors %}
+                    <p class="warning">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h1>Información Personal</h1>
+        {% if g.usertype != 'usuario' %}
+            <h3>{{ item['usertype'] }}</h3>
+        {% endif %}
+        <div class="form">
+            <label class="info">
+                <span class="titulo">Nombre Completo: </span>
+                <input type="text" id="name" value="{{ item.nombre + ' ' + item.apellido }}" readonly> 
+            </label>
+            <label class="info">
+                <span class="titulo">Usuario:</span>
+                <input type="text" id="userName" value="{{ item.usuario }}" readonly> 
+            </label>
+            <label class="info">
+                <span class="titulo">Correo Electronico:</span>
+                <input type="text" id="email" value="{{ item.email }}" readonly>
+            </label>
+            <br>
+            <label class="info">
+                <span class="titulo">Fecha de Nacimiento:</span>
+                <input type="text" id="birthday" value="{{ item.fecha_nacimiento }}" readonly>
+            </label>
+            <label class="info">
+                <span class="titulo">Sexo:</span>
+                <input type="text" id="sex" value="{{ item.sexo }}" readonly>
+            </label>
+        </div>
+        <div class="buttons">
+            {% if g.usertype != 'piloto' %}
+                <a href="{{ url_for('editar_usuario',  usuario = item.usuario) }}" class="b Editar">Editar</a>
+            {% endif %}
+            {% if g.usertype == 'piloto' %}
+                <a href="{{ url_for('ItinerarioVuelo',  piloto = item.usuario) }}" class="b Editar">Itinerario</a>
+            {% endif %}
+            {% if g.usertype != 'administrador' %}
+                <a href="{{ url_for('home') }}" class="b Atras">Atras</a>
+            {% endif %}
+            {% if g.usertype == 'administrador' %}
+                <a href="{{ url_for('eliminar_usuario',  usuario = item.usuario) }}" class="b Eliminar">Eliminar</a>
+                <a href="{{ url_for('ver_usuarios') }}" class="b Atras">Atras</a>    
+            {% endif %}
+        </div>
+    </form>
+</main>
+{% endblock %}
 
-                <label class="registrar">
-                    <span class="titulo">Tipo de Usuario:</span>
-                    <input type="text" name="userTipe" readonly>
-                </label>
-                               
-                
-                <label class="registrar">
-                    <span class="titulo">Sexo:</span>
-                    <input type="text" name="UserSex" readonly>
-                    
-                </label>
-
-                <label class="registrar">
-                    <span class="titulo">Fecha de Nacimiento:</span>
-                    <input type="text" name="UserBird" readonly>
-                </label>
-                <label class="registrar">
-                    <span class="titulo">Correo Electrónico:</span>
-                    <input type="text" name="UserEmail" readonly>
-                </label>
-            </div>
-            <div class="buttons">                
-                <button class="bAtras">
-                    <a href="/HomeUser" class="bLink">Atras</a>
-                </button>
-                                <button class="bAtras">
-                    <a href="/CambiarContraseña" class="bLink">Cambiar contraseña</a>
-                </button>
-
-            </div>
-        </form>
-    </main>
-
-</body>
-</html>
+{% block scripts %}
+<script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
+{% endblock %}
