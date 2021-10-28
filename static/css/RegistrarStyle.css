@@ -16,41 +16,6 @@
     --font-hind: 'Hind', sans-serif;
 }
 
-.page-head {   
-    background: rgb(3,161,251);
-    background: radial-gradient(circle, rgba(3,161,251,1) 30%, rgba(2,115,180,1) 70%, rgba(1,92,143,1) 100%);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 186.1px;    
-    
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-}
-
-.menu-link {
-    color: var(--MintCream);
-    text-decoration: none;
-    padding-left: 50px;
-    font-family: var(--font-abadi);
-}
-
-.menu-link:hover {
-    color: var(--Tangerine);
-}
-
-.menu i{
-    padding: 5px;
-}
-
-body {
-    margin: 0pt;
-    font-family: var(--font-abadi);
-    color: var(--EerieBlack);
-}
-
 .registrarUsuario, .form {
     display: flex;
     flex-direction: column;
@@ -120,6 +85,16 @@ input, select {
     padding-top: 5px;
 }
 
+.flash {
+    font-size: 12px;
+    color: #8b4409;
+    background-color: #ff8800bb;
+    padding: 10px;
+    margin-top: -15px;
+    margin-right: 28%;
+    border: 1px solid var(--Tangerine);
+}
+
 .requisitos {
     font-size: 10px;
     color: var(--CaputMortuum);
@@ -159,7 +134,7 @@ h1 {
     background-color: var(--CaputMortuum);
     border: none;
     border-radius: 50px;
-    padding: 11px 40px;
+    padding: 10px 40px;
     font-size: 13px;
 }
 

@@ -1,0 +1,229 @@
+.reservarVuelo {
+    background: rgb(3,161,251);
+    background: radial-gradient(circle, rgba(3,161,251,1) 30%, rgba(2,115,180,1) 70%, rgba(1,92,143,1) 100%);
+    padding: 10px 12.5% 8px 12.5%;
+    margin-top: 66px;
+}
+
+.titulo {
+    color: var(--MintCream);
+    font-size: 10px;
+}
+
+.form {
+    display: flex;
+    margin: 5px 10px 10px 10px;
+    padding-left: 20px;
+}
+
+h2 {
+    margin: 0px 10px;
+    color: var(--MintCream);
+}
+
+.h2 {
+    margin: 0 10px;
+    color: var(--MintCream);
+
+    font-family: var(--font-monserrat);
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.h2:hover {
+    color: var(--Tangerine);
+}
+
+h2 i{
+    padding-right: 5px;
+}
+
+.success {
+    font-size: 12px;
+    text-align: center;
+    color: #098b14;
+    background-color: #5eff00bb;
+    padding: 10px;
+    margin: 20px 183.64px 0px;
+    border: 1px solid #2fc20b;
+}
+
+.warning {
+    font-size: 12px;
+    text-align: center;
+    color: #8b4409;
+    background-color: #ff8800bb;
+    padding: 10px;
+    margin: 20px 183.64px 0px;
+    border: 1px solid var(--Tangerine);
+}
+
+.input {
+    display: flex;
+    border-radius: 15px;
+    background-color: white;
+    padding: 4px 6px;
+}
+
+.org-des {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.funcion {
+    display: flex;
+}
+
+.personas {
+    color: var(--EerieBlack);
+}
+
+input {
+    border-radius: 10px;
+    border: none;
+    color: var(--CaputMortuum);
+    padding-left: 10px;
+}
+
+.code input {
+    width: 500px;
+}
+
+.persona {
+    padding-left: 5px;
+    width: 30px;
+    text-align: right;
+}
+
+.reservar {
+    margin-left: 30px;
+}
+
+.Submit {
+    color: var(--MintCream);
+    border: none;
+    border-radius: 50px;
+    padding: 0px 50px;
+    font-family: var(--font-monserrat);
+    font-size: 14px;
+    background-color: var(--Tangerine);
+    margin: 15px 0px 0px 30px;
+}
+
+.Submit:hover{
+    background-color: #ff9900
+}
+
+.Reservar {
+    background-color: var(--Lapizlazuli);
+}
+
+.warning {
+    background: var(--Tangerine);
+    padding: 10px;
+    text-align: center;
+    font-weight: 500;
+    margin: -80px 0px 0px 11%;
+    color: var(--MintCream);
+    font-family: var(--font-abadi);
+    position: absolute;
+    border-radius: 10px;
+    filter: drop-shadow(5px 5px 5px #8b5109);
+    visibility: hidden;
+}
+
+.w {
+    background-color: var(--Tangerine);
+    margin-left: 100px;
+}
+
+.warning::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 10px solid var(--Tangerine);
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--Tangerine);
+    border-bottom: 10px solid transparent;
+    left: 19px;
+    bottom: -10px;
+}
+
+.vuelos {
+    margin: 30px 24.7% 0px 24.7%;
+    background-color: white;
+    filter: drop-shadow(5px 5px 5px rgb(187, 187, 187));
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    text-align: center;
+}
+
+.info {
+    border: 1px solid var(--MintCream);
+    padding: 20px 0px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--EerieBlack);
+}
+
+.header h2 {
+    color: #161616;
+}
+
+.secciones {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-right: 51px;
+}
+
+.px {
+    margin-right: 0px;
+}
+
+.titulos {
+    font-size: 12px;
+    font-family: var(--font-hind);
+    color: var(--Tangerine);
+}
+
+.ciudades {
+    text-transform: uppercase;
+}
+
+.valores {
+    font-size: 20px;
+    font-family: var(--font-abadi);
+    margin-top: -5px;
+}
+
+.links {
+    margin: 0%;
+    background-color: var(--CaputMortuum);
+    border: none;
+}
+
+.b {
+    text-decoration: none;
+    padding: 12.7px 20px 12.7px 20px;
+
+    color: var(--MintCream);
+    font-family: var(--font-monserrat);
+    font-size: 12px;
+}
+
+.Editar {
+    background-color: var(--Lapizlazuli);
+}
+
+.Comentar {
+    padding: 33px 20px 33px 20px;
+    text-align: center;
+}

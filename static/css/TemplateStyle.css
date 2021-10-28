@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;500;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
+
+:root{
+    /*Colors*/
+    --Lapizlazuli: #015C8F;
+    --Tangerine: #F18B12;
+    --MintCream: #EBF4ED;
+    --CaputMortuum: #58201D;
+    --EerieBlack: #161616;
+
+    /*Fonts*/
+    --font-monserrat: 'Montserrat', sans-serif;
+    --font-abadi: 'Raleway', sans-serif;
+    --font-hind: 'Hind', sans-serif;
+}
+
+.page-head {   
+    background: rgb(3,161,251);
+    background: radial-gradient(circle, rgba(3,161,251,1) 30%, rgba(2,115,180,1) 70%, rgba(1,92,143,1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: right; 
+    padding: 23.8px 186.1px; 
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.logo {
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    margin-left: 186.1px;
+}
+
+.menu-link {
+    color: var(--MintCream);
+    text-decoration: none;
+    padding-left: 30px;
+    font-family: var(--font-abadi);
+}
+
+.menu-link:hover {
+    color: var(--Tangerine);
+}
+
+.userInfo span {
+    font-size: 8px;
+    text-transform: uppercase;
+    position: absolute;
+    margin: -4px 0px 0px -50px;
+}
+
+.menu i{
+    padding: 5px;
+}
+
+#usericon {
+    padding: 0px;
+    position: absolute;
+    margin-top: -7px;
+    margin-left: 5px;
+    width: 30pt;
+    height: auto;
+}
+
+body {
+    margin: 0pt;
+    font-family: var(--font-abadi);
+}

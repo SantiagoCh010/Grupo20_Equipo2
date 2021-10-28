@@ -1,0 +1,174 @@
+.reservarVuelo {
+    background: rgb(3,161,251);
+    background: radial-gradient(circle, rgba(3,161,251,1) 30%, rgba(2,115,180,1) 70%, rgba(1,92,143,1) 100%);
+    padding: 10px 13% 8px 13%;
+    margin-top: 55px;
+}
+
+.titulo {
+    color: var(--MintCream);
+    font-size: 10px;
+    padding-left: 28px;
+}
+
+h2 {
+    margin: 0px 10px;
+    color: var(--MintCream);
+}
+
+.h2 {
+    margin: 0 10px;
+    color: var(--MintCream);
+
+    font-family: var(--font-monserrat);
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.h2:hover {
+    color: var(--Tangerine);
+}
+
+.form {
+    display: flex;
+    margin: 5px 10px 10px 10px;
+    padding-left: 20px;
+}
+
+input, select {
+    display: flex;
+    border-radius: 15px;
+    background-color: white;
+    padding: 4px 6px;
+
+    border: none;
+    outline: none;
+    color: var(--CaputMortuum);
+    padding-left: 10px;
+}
+
+.p {
+    padding-left: 0;
+}
+
+.success {
+    font-size: 12px;
+    text-align: center;
+    color: #098b14;
+    background-color: #5eff00bb;
+    padding: 10px;
+    margin: 20px 183.64px 0px;
+    border: 1px solid #2fc20b;
+}
+
+.warning {
+    font-size: 12px;
+    text-align: center;
+    color: #8b4409;
+    background-color: #ff8800bb;
+    padding: 10px;
+    margin: 20px 183.64px 0px;
+    border: 1px solid var(--Tangerine);
+}
+
+.H input {
+    width: 500px;
+}
+
+.funcion {
+    display: flex;
+}
+
+.reservar {
+    margin-left: 30px;
+}
+
+.usuarios img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+}
+
+p {
+    color: var(--EerieBlack);
+    text-align: right;
+    margin-right: 186px;
+}
+
+p span {
+    color: var(--Lapizlazuli);
+}
+
+.b {
+    color: var(--MintCream);
+    border: none;
+    border-radius: 50px;
+    padding: 7px 50px;
+    font-family: var(--font-monserrat);
+    font-size: 14px;
+}
+
+.Submit {
+    background-color: var(--Tangerine);
+    margin: 15px 0px 0 30px;
+}
+
+.Submit:hover{
+    background-color: #ff9900
+}
+
+.Reservar {
+    background-color: var(--Lapizlazuli);
+}
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(200px, 1fr));
+    margin: 20px 286.1px;
+}
+
+.usuarios {
+    margin-right: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    filter: drop-shadow(5px 5px 5px rgb(187, 187, 187));
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 30px 5px;
+}
+
+.spanUser {
+    padding-top: 5px;
+    font-weight: 600;
+    font-family: var(--font-monserrat);
+}
+
+.spanType {
+    padding-bottom: 10px;
+    font-size: 12px;
+}
+
+.footButton {
+    background-color: var(--CaputMortuum);
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.footButton a {
+    color: var(--Tangerine);
+    text-decoration: none;
+    font-family: var(--font-monserrat);
+    font-size: 800;
+}
+
+.itinerario {
+    border-left: 1px solid rgb(211, 163, 30);
+    padding-left: 10px;
+}
+

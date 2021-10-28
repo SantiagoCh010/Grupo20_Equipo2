@@ -16,20 +16,6 @@
     --font-hind: 'Hind', sans-serif;
 }
 
-.page-head {   
-    background: rgb(3,161,251);
-    background: radial-gradient(circle, rgba(3,161,251,1) 30%, rgba(2,115,180,1) 70%, rgba(1,92,143,1) 100%);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 186.1px;    
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-}
-
-
 .slider{    
     width: 100%;
     margin:auto; 
@@ -67,26 +53,6 @@
     100%{margin-left:-300%;}
 }
 
-.menu-link {
-    color: var(--MintCream);
-    text-decoration: none;
-    padding-left: 50px;
-    font-family: var(--font-abadi);
-}
-
-.menu i{
-    padding: 5px;
-}
-
-.menu-link:hover {
-    color: var(--Tangerine);
-}
-
-body {
-    margin: 0pt;
-    font-family: var(--font-abadi);
-}
-
 main::after {
     content: "";
     display: table;
@@ -96,9 +62,9 @@ main::after {
 .reservarVuelo {
     background: rgb(3,161,251);
     background: radial-gradient(circle, rgba(3,161,251,1) 30%, rgba(2,115,180,1) 70%, rgba(1,92,143,1) 100%);
-    padding: 10px 13%;
-  
+    padding: 10px 12.5%;
 }
+
 
 .titulo {
     color: var(--MintCream);
@@ -111,6 +77,13 @@ main::after {
     padding-left: 20px;
 }
 
+.input {
+    display: flex;
+    border-radius: 15px;
+    background-color: white;
+    padding: 4px 6px;
+}
+
 .org-des {
     display: flex;
     margin-bottom: 10px;
@@ -121,14 +94,20 @@ main::after {
 }
 
 .personas {
-    color: var(--MintCream);
-    padding-left: 5px;
+    color: var(--EerieBlack);
+    margin-left: -4px;
+}
+
+.persona{
+    text-align: right;
+    width: 33px;
+    font-size: 15px;
 }
 
 input {
     border-radius: 10px;
     border: none;
-    color: #58201D;
+    color: var(--CaputMortuum);
     padding-left: 10px;
 }
 
@@ -152,7 +131,7 @@ button {
 }
 
 button:hover{
-    background-color:#ff9616;
+    background-color: #ff9900
 }
 
 h1 {
@@ -233,6 +212,77 @@ p {
 .information {
     float: left;
     width: 50%;
-    padding: 0px 20px;
+    padding: 10px 20px;
     box-sizing: border-box;
+}
+
+.warning {
+    background: var(--Tangerine);
+    padding: 10px;
+    text-align: center;
+    font-weight: 500;
+    margin: -80px 0px 0px 11%;
+    color: var(--MintCream);
+    font-family: var(--font-abadi);
+    position: absolute;
+    border-radius: 10px;
+    filter: drop-shadow(5px 5px 5px #8b5109);
+    visibility: hidden;
+}
+
+.b {
+    margin-left: 70px;
+}
+
+.warning::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 10px solid var(--Tangerine);
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--Tangerine);
+    border-bottom: 10px solid transparent;
+    left: 19px;
+    bottom: -10px;
+}
+
+.OpcionesLista {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 183.1px;
+    justify-content: center;
+}
+
+.Opciones {
+    display: flex;
+    flex-direction: column;
+    margin-right: 100px;
+    filter: drop-shadow(5px 5px 5px rgb(26, 25, 25));
+    
+    text-align: center;
+    text-decoration: none;
+    font-family: var(--font-monserrat);
+    color: var(--Tangerine);
+}
+
+.Opciones:last-child {
+    margin-right: 0;
+}
+
+.Opciones img {
+    width: 200px;
+    height: auto;
+    border-radius: 25px 25px 0 0;
+}
+
+.Opciones span {
+    margin-top: -20px;
+    background-color: var(--EerieBlack);
+    padding: 10px;
+    border-radius: 0 0 25px 25px;
+}
+
+.Opciones:hover {
+    filter: grayscale(1) drop-shadow(5px 5px 5px rgb(26, 25, 25));
 }
