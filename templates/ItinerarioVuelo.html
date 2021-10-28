@@ -1,88 +1,72 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'Template.html' %}
+{% block style %}}
     <title>Itinerario de Vuelos</title>
-    <link rel="icon" type="svg" href="{{url_for('static', filename='icons/Logo.svg')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/ItinerarioVueloStyle.css')}}">
-    <script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    
-    <header class="page-head">
-        <a href="/HomePiloto" class="logo">
-            <img src="{{url_for('static', filename='icons/GuapiLogo.svg')}}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
-        </a>
-        <nav class="menu">
-            <a href="#" class="menu-link"></a>
-            <a href="#" class="menu-link"></a>
-            <a href="/InfoPiloto" class="menu-link">
-                Name Surname
-                <img src="{{url_for('static', filename='icons/user.svg')}}" alt="user">
-                <span>BIENVENIDO,</span>
-            </a>
-        </nav>
-    </header>
+{% endblock %}
 
-    <main>        
-        <form class="ItinerarioVuelo" method="GET" action="" onsubmit="">
-            <h1><i class="fas fa-solid fas fa-calendar-week"></i> Itinerario de Vuelos</h1>
-            <div class="form">
-                <div class="name-sur">                    
-                    <span class="titulo">Nombres:
-                        <input type="text" name="name" readonly>
-                    </span>
-                    <span class="titulo">Apellidos:
-                        <input type="text" name="name" readonly>
-                    </span>                    
-                </div>
-                <br>
-                <table class="itinerarioTabla">
-                    <tr>
-                        <th>Codigo del vuelo</th>
-                        <th>Codigo del avión</th>
-                        <th>Ciudad de origen</th>
-                        <th>Ciudad de destino</th>
-                        <th>Hora de Partida</th>
-                        <th>Fecha de Salida</th>
-                        <th>Estado</th>                    
-                    </tr>
-                    {% if lista %}
-                        {% for item in lista %}
-                            <tr>
-                                <td>{{ item.cod_vuelo}}</td>
-                                <td>{{ item.cod_avion}}</td>
-                                <td>{{ item.ciudad_origen}}</td>
-                                <td>{{ item.ciudad_destino}}</td>
-                                <td>{{ item.hora_vuelo}}</td>
-                                <td>{{ item.fecha_vuelo}}</td>
-                                <td>{{ item.estado}}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                            <tr>
-                                    <td colspan="7"> Vuelos no encontrados</td>
-                            </tr>
-                    {% endif %}
-                    {% if error %}
+{% block main %}
+<main>        
+    <form class="ItinerarioVuelo" method="GET" action="" onsubmit="">
+        <h1><i class="fas fa-solid fas fa-calendar-week"></i> Itinerario de Vuelos</h1>
+        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+            {% for error in errors %}
+                <p class="warning">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+        <div class="form">
+            <div class="name-sur">                    
+                <label>
+                    <span class="titulo">Nombre Completo:</span>
+                    <input type="text" name="name" value="{{ pilotName }}" readonly>
+                </label>
+            </div>
+            <br>
+            <table class="itinerarioTabla">
+                <tr>
+                    <th>Codigo del vuelo</th>
+                    <th>Codigo del avión</th>
+                    <th>Ciudad de origen</th>
+                    <th>Ciudad de destino</th>
+                    <th>Hora de Partida</th>
+                    <th>Fecha de Salida</th>
+                    <th>Estado</th>                    
+                </tr>
+                {% if informacion %}
+                    {% for item in informacion %}
                         <tr>
-                            <td colspan="7">{{error}}</td>
+                            <td>{{ item.codVuelos}}</td>
+                            <td>{{ item.codAvion}}</td>
+                            <td>{{ item.ciudadOrigen}}</td>
+                            <td>{{ item.ciudadDestino}}</td>
+                            <td>{{ item.horaVuelo}}</td>
+                            <td>{{ item.fechaVuelo}}</td>
+                            <td>{{ item.estado}}</td>
                         </tr>
-                    {% endif %}
-                </table>
-                
-                
-            </div>
-            <div class="buttons">    
-                <button name= "consultarVueloPiloto" class="bconsultar" type="submit">Consultar</button>     
-                <button class="bAtras">
-                    <a href="/HomePiloto" class="bLink">Atras</a>
-                </button>
-            </div>
-        </form>
-    </main>
+                    {% endfor %}
+                {% else %}
+                        <tr>
+                            <td colspan="7"> Vuelos no encontrados</td>
+                        </tr>
+                {% endif %}
+                {% if error %}
+                    <tr>
+                        <td colspan="7">{{error}}</td>
+                    </tr>
+                {% endif %}
+            </table>
+            
+            
+        </div>
+        <div class="buttons">    
+            <a href="{{ url_for('home') }}" class=" bAtras bLink">Atras</a>
+        </div>
+    </form>
+</main>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+{% endblock %}
