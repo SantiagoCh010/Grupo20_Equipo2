@@ -1,66 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'Template.html' %}
+{% block style %}
+<title>Ingresar</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/LoginStyle.css') }}">
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingresar</title>
-    <link rel="icon" type="svg" href="{{url_for('static', filename='icons/Logo.svg')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/LoginStyle.css')}}">
-</head>
-
-<body>
-
-    <header class="page-head">
-        <a href="/Home" class="logo">
-            <img src="{{url_for('static', filename='icons/GuapiLogo.svg')}}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
-        </a>
-        <nav class="menu">
-            <a href="/Home" class="menu-link"><i class= "fas fa-solid fas fa-home" ></i>Inicio</a>
-            <a href="/Login" class="menu-link"><i class="fas fa-solid fas fa-sign-in-alt"></i>Ingresar</a>
-            <a href="/RegistroUsuario" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Registrar</a>
-        </nav>
-    </header>
-
-    <main>
-        <img src="{{url_for('static', filename='icons/user+.svg')}}" alt="user+.svg" class="user"/>
-        <form class="logUsuario" method="POST" action="{{ url_for('Login') }}">
-            <h1>Ingresar</h1>
-            <div class="form">
-                <label class="ns">
-                    <span class="titulo">Usuario:</span>
-                    <input type="text" id="userName"name="userName">
-                    <span class="warning" id="uWarning"></span>
-                </label>
-                <label class="ns">
-                    <span class="titulo">Contraseña:</span>
-                    <input type="password" id="password"name="password">
-                    <img src="{{url_for('static', filename='icons/eyeO.svg')}}" alt="ver" class="eye" id="peye" 
-                         onmouseover="see_pword('eyeC', 'text')" onmouseleave="see_pword('eyeO', 'password')">
-                    <span class="warning" id="pWarning"></span>
-                    </label>
-            </div>
-            <div class="links">
-                <a href="/RecuperarContraseña" class="log-link">¿Olvidaste Tu Contraseña?</a>
-                <button class="bLogin" id="bLogin" type="submit">Ingresar</button>
-                <div class="bellow">
-                    <a href="/RegistroUsuario" class="log-link">No Estoy Registrado</a>
-                    <button class="bAtras">
-                        <a href="/Home" class="bLink">Atras</a>
-                    </button>
-                </div>
-            </div>
-            <div class="grupo">
-                {% if mensaje %}
-                    {{mensaje}}
+{% block main %}
+<main>
+    <img src="{{ url_for('static', filename='icons/user+.svg') }}" alt="user+.svg" class="user"/>
+    <form class="logUsuario" method="POST" action="">
+        <h1>Ingresar</h1>
+        <div class="form">
+            {% with warnings = get_flashed_messages() %}
+                {% if warnings %}
+                    {% for warnings in warnings %}
+                        <p class="warning">
+                            {{ warnings }}
+                        </p>
+                    {% endfor %}
                 {% endif %}
+            {% endwith %}
+            <label class="ns">
+                <span class="titulo">Usuario:</span>
+                <input type="text" id="userName" name="userName">
+            </label>
+            <label class="ns">
+                <span class="titulo">Contraseña:</span>
+                <input type="password" id="password" name="password">
+                <img src="{{ url_for('static', filename='icons/eyeO.svg') }}" alt="ver" class="eye" id="peye">
+                <input id="hiPassword" type="hidden" value="{{ url_for('static', filename='icons/eyeC.svg') }}" />
+            </label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="rememberMe" name="rememberMe" class="check">
+            <label for="rememberMe" class="check">Recordar Usuario</label>
+        </div>
+        <div class="links">
+            <a href="RecuperarContrasena.html" class="log-link">¿Olvidaste Tu Contraseña?</a>
+            <button class="bLogin" id="bLogin" type="submit">Ingresar</button>
+            <div class="bellow">
+                <a href="RegistroUsuario.html" class="log-link">No Estoy Registrado</a>
+                <button class="bAtras">
+                    <a href="Home.html" class="bLink">Atras</a>
+                </button>
             </div>
-        </form>
-    </main>
-</body>
+        </div>
+    </form>
+</main>
+{% endblock %}
 
-<script type="text/javascript" src="{{url_for('static', filename='js/LoginScript.js')}}"></script>
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/LoginScript.js') }}"></script>
 <script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
-
-</html>
+{% endblock %}
