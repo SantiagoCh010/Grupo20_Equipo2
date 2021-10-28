@@ -445,7 +445,7 @@ def Comentarios():
             return render_template('ComentarioVuelos.html')    
 
 @app.route('/ConsultaVuelos/', methods=['GET'])
-def ConsultaVuelos():
+def consultar_vuelos():
     return render_template('ConsultaVuelo.html')
 
 @app.route('/EditarVuelo/', methods=["GET",'PUT','POST'])
@@ -533,5 +533,6 @@ def RecuperarContraseña():
     return render_template('RecuperarContraseña.html')
 
 @app.route('/ReservaVuelo/', methods=['GET','POST'])
-def ReservaVuelo():
+def reservar_vuelo():
     return render_template('ReservaVuelo.html')
+
