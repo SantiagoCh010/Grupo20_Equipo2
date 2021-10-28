@@ -1,0 +1,99 @@
+{% extends 'Template.html' %}
+{% block style %}
+<title>Consultar Vuelos</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/VerVuelosStyle.css') }}">
+{% endblock %}
+
+{% block main %}
+<main>  
+    <form class="reservarVuelo" method="POST" action="{{ url_for('ver_vuelos') }}">
+        <h2><i class="fas fa-plane-departure"></i> Ver Vuelos</h2>
+        {% if g.usertype == "administrador" %}
+            <a href="" class="h2">¿Quiere agregar un vuelo?</a>
+        {% endif %}
+            <div class="form">
+            <label class="reservar code">
+                <span class="titulo">C O D I G O</span>
+                <div class="funcion">
+                    <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="" width="24px" height="24px">
+                    <input type="text" class="IDVuelo" id="IDVuelo" name="IDVuelo" value="" placeholder="#XXXXX">
+                </div>
+                <span class="warning" id="lVuelo"></span>
+            </label>
+            <label class="reservar">
+                <span class="titulo">F  E C H A</span>
+                <div class="funcion">
+                    <input type="date" class="fecha" id="fecha" name="fecha">
+                </div>
+                <span class="warning w" id="lFecha"></span>
+            </label>
+            <button id="Buscar" class="Submit">Buscar</button>
+        </div>
+    </form>
+    {% with successes = get_flashed_messages(category_filter=["success"]) %}
+        {% if successes %}
+            {% for success in successes %}
+                <p class="success">
+                    {{ success }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+            {% for error in errors %}
+                <p class="warning">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</main>
+
+{% if informacion %}
+    {% for item in informacion %}
+        <div class="vuelos">
+            <a class="info" href="">
+                <div class="secciones">
+                    <span class="titulos">V U E L O</span>
+                    <span class="valores">#{{ item.codVuelos }}</span>
+                </div>
+                <div class="secciones">
+                    <span class="titulos">O R I G E N</span>
+                    <span class="valores ciudades">{{ item.ciudadOrigen }}</span>
+                </div>
+                <div class="secciones">
+                    <span class="titulos">D E S T I N O</span>
+                    <span class="valores ciudades">{{ item.ciudadDestino }}</span>
+                </div>
+                <div class="secciones">
+                    <span class="titulos">P I L O T O</span>
+                    <span class="valores">{{ item.codPiloto }}</span>
+                </div>
+                <div class="secciones px">
+                    <span class="titulos">A V I O N</span>
+                    <span class="valores">#{{ item.codAvion }}</span>
+                </div>
+            </a>
+            {% if g.usertype == "administrador" %}
+                <div class="secciones links">
+                    <a href="" class="b Editar">Editar</a>
+                    <a href="" class="b Eliminar">Eliminar</a>
+                </div>
+            {% endif %}
+            {% if g.usertype == "usuario" %}
+                <div class="secciones links">
+                    <a href="" class="b Comentar">Comentar</a>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+
+    <p class="warning">No se encontraron vuelos con esta descripción</p>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

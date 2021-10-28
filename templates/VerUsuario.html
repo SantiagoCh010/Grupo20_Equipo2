@@ -1,0 +1,84 @@
+{% extends 'Template.html' %}
+{% block style %}
+<title>Ver Usuarios</title>}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/VerUsuarioStyle.css') }}">
+{% endblock %}
+
+{% block main %}
+<main>  
+    <form class="reservarVuelo" method="POST" action="{{ url_for('ver_usuarios') }}">
+       <h2>Usuarios</h2>
+       <a href="{{ url_for('adminregistrar',  admin=g.usuario ) }}" class="h2">Registrar el usuario</a>
+       <div class="form">
+            <label class="reserva-p">
+                <span class="titulo">B U S C A R - N O M B R E</span>
+                <div class="funcion H">
+                    <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="" width="24px" height="24px">
+                    <input type="text" class="origen" id="fullname" name="fullname">
+                </div>
+            </label>
+            <label class="reservar">
+                <span class="titulo">F I L T R O</span>
+                <div class="funcion">
+                    <img src="{{ url_for('static', filename='icons/filter.svg') }}" alt="filtro" width="22px" height="22px">
+                    <select id="userType" name="userType">
+                        <option value="" selected disabled hidden>--Selecciona el Tipo de Usuario--</option>
+                        <option value="usuario">Usuario</option>
+                        <option value="piloto">Piloto</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                </div>
+            </label>
+            <button id="Buscar" class="b Submit">Buscar</button>
+        </div>
+    </form>
+    {% with successes = get_flashed_messages(category_filter=["success"]) %}
+        {% if successes %}
+            {% for success in successes %}
+                <p class="success">
+                    {{ success }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+            {% for error in errors %}
+                <p class="warning">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</main>
+
+{% if informacion %}
+    <div class="info">
+        {% for item in informacion %}    
+            <div class="usuarios">
+                <div class="body">
+                    <header>
+                        <img src="{{url_for('static', filename='profile_pics/' + item['img_profile'])}}" alt="">
+                    </header>
+                    <span class="spanUser">{{ item.nombres }} {{ item.apellidos }}</span>
+                    <span class="spanType">{{ item.usertype }}</span>
+                </div>
+                <footer class="footButton">
+                    <a href="{{ url_for('informacion_admin', user=item.usuario) }}">Información</a>
+                    {% if item.usertype == 'piloto' %}
+                        <a href="{{ url_for('ItinerarioVuelo',  piloto = item.usuario) }}" class='itinerario'>Itinerario</a>
+                    {% endif %}
+                </footer>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+
+    <p class="warning">No se encontraron personas con ese usuario y/o tipo</p>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
+{% endblock %}
