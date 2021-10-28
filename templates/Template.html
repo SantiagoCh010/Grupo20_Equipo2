@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="svg" href="{{ url_for('static', filename='icons/Logo.svg') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/TemplateStyle.css') }}">
+    {% block style %}{% endblock %}
+</head>
+<body>
+    
+    {% block main %}
+    {% endblock %}
+
+    <header class="page-head">
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='icons/GuapiLogo.svg') }}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
+        </a>
+        <nav class="menu">
+            <a href="{{ url_for('home') }}" class="menu-link"><i class= "fas fa-solid fas fa-home" ></i>Inicio</a>
+            {% if not g.user %}
+                <a href="{{ url_for('login') }}" class="menu-link"><i class="fas fa-solid fas fa-sign-in-alt"></i>Ingresar</a>
+                <a href="{{ url_for('registrar') }}" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Registrar</a>
+            {% else %}
+                {% if g.usertype == "usuario" %}
+                    <a href="{{ url_for('consultar_vuelos') }}" class="menu-link"><i class= "fab fa-avianex"></i>Consulta de Vuelo</a>
+                    <a href="{{ url_for('ver_vuelos') }}" class="menu-link"><i class="far fa-clipboard"></i>Mis vuelos</a>
+                {% elif g.usertype == "piloto" %}
+                    <a href="{{ url_for('ItinerarioVuelo',  piloto = g.usuario) }}" class="menu-link"><i class="far fa-clipboard"></i>Itineario</a>
+                {% else %}
+                    <a href="{{ url_for('ver_vuelos') }}" class="menu-link"><i class="fab fa-avianex"></i>Ver vuelos</a>
+                    <a href="{{ url_for('ver_usuarios') }}" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Ver Usuarios</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="menu-link">Cerrar Sesión</a>
+                <a href="{{ url_for('informacion') }}" class="menu-link userInfo">
+                    {{ g.usuario }} <i class="far fa-user fa-2x" id="usericon"></i></i> 
+                    <span>
+                        {% if g.sexo == "femenino" %} BIENVENIDA,
+                        {% elif g.sexo == "noDefinido" %} BIENVENIDO,
+                        {% else %} BIENVENIDX,
+                        {% endif %}
+                    </span>
+                </a>
+            {% endif %}
+        </nav>
+    </header>
+
+</body>
+{% block scripts %}
+{% endblock %}
+<script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
+</html>
