@@ -1,5 +1,15 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+import functools
+import secrets
+
+from flask import Flask, request, g, url_for, flash, session
+from modelos.uModels import User, Deletes, Admins, Pilotos
+from modelos.vModels import Vuelos
+from flask.templating import render_template
+from werkzeug.utils import redirect
+from datetime import timedelta
+from sqlite3.dbapi2 import Error
+from modelos.etemplates import *
 from utils import *
 #from forms import FormRegistro
 from models import *
@@ -7,10 +17,377 @@ from models import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(30)
 
+#Decorador para verificar que el usuario esté logeado
+def login_requiered(view):
+    @functools.wraps(view)
+    def wrapped_view(**kargs):
+        if g.user is None:
+            return redirect( url_for('login') )
+        
+        return view(**kargs)
+    
+    return wrapped_view
 
-@app.route('/', methods=["GET",'POST'])
-def index():
-    return render_template('Home.html')    
+# Usuarios que no sean administradores no pueden utilizar esta ruta
+def admin_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kargs):
+        if g.usertype != "administrador":
+            return redirect( url_for('home') )
+        
+        return view(**kargs)
+    
+    return wrapped_view
+
+# Usuarios que no sean pilotos no pueden utilizar esta ruta
+# La creé planeando utilizarla, pero no tuve la oportunidad (jejeje)
+def pilot_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kargs):
+        if g.usertype != "piloto":
+            return redirect( url_for('home') )
+        
+        return view(**kargs)
+    
+    return wrapped_view
+
+# El usuario normal no puede utilizar esta ruta
+def user_notrequired(view):
+    @functools.wraps(view)
+    def wrapped_view(**kargs):
+        if g.usertype == "usuario":
+            return redirect( url_for('home') )
+        
+        return view(**kargs)
+    
+    return wrapped_view
+
+# Función para guardar la imagen de perfil
+def save_picture(profile_pic):
+    try:
+        random_hex = secrets.token_hex(8)
+        _, f_ext = os.path.splitext(profile_pic.filename)
+        if f_ext == '.png' or f_ext == '.jpg' or f_ext == '.jpeg':
+            picture_fn = random_hex + f_ext
+            picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+            profile_pic.save(picture_path)
+
+            return picture_fn
+        
+        return ''
+    except TypeError:
+        print('Ocurrio un error al momento de guardar la imagen -' + str(TypeError))
+        return ''
+
+@app.before_request
+def cargar_usuario():
+    # Para saber si hay un usuario utilizando la app o no
+    user = session.get('user')
+    if user is None:
+        g.user = None
+    else:
+        g.user = User.cargar(user)
+        
+        # Variables universales que permitirán saber características del usuario loggeado
+        informacion = User.info_usuario(user)
+        if informacion:
+            for i in informacion:
+                g.usuario = i["usuario"]
+                g.sexo = i["sexo"]
+                g.usertype = i["usertype"]
+                g.image = i["img_profile"]
+
+@app.route('/')
+def home():
+    return render_template('Home.html')
+
+@app.route('/ingresar', methods=['GET', 'POST'])
+def login():
+    if g.user: return redirect(url_for('home'))
+    else:
+        if request.method == 'GET':
+            return render_template('Login.html')
+        else:
+            try:
+                usr = request.form["userName"].replace("'", "")
+                pwd = request.form["password"].replace("'", "")
+                obj_user = User("", "", "", "", "", usr, pwd, "", "")
+                if obj_user.autentificar():
+                    session.clear()
+                    session["user"] = usr
+                    if request.form.get('rememberMe'): 
+                        session.permanent = True
+                        app.permanent_session_lifetime = timedelta(minutes=5)
+                    return redirect(url_for('home'))
+                
+                flash("Usuario o Contraseña Incorrecta. Porfavor, Intente Nuevamente.")
+                return render_template('login.html')
+            
+            except KeyError or TypeError:
+                print("ha ocurrido un error al recibir los datos")
+
+@app.route('/registrar', methods=['GET', 'POST'])
+def registrar():
+    if g.user: return redirect(url_for('home'))
+    else:
+        if request.method == 'GET':
+            return render_template('Registro.html')
+        else:
+            if request.form:
+                errores = ""
+                try:
+                    nombre = request.form['name']
+                    apellido = request.form['surname']
+                    sexo = request.form['sex']
+                    birthday = request.form['birthday']
+                    email = request.form['email']
+                    user = request.form['username']
+                    contraseña = request.form['password']
+                    confirmacion = request.form.get('pconfirmation')
+                    declaracion = request.form.get('TeC')
+                    tipoUser = "usuario"
+
+                    # Validaciones dentro del servidor con "utils"
+                    if not isPasswordValid(contraseña): errores += 'La contraseña es invalida'
+                    elif contraseña != confirmacion: errores += 'Las contraseñas son distintas. Intentelo nuevamente.'
+                    if not isEmailValid(email): errores += 'El correo electronico es invalido'
+                    
+                    if declaracion != "checked": errores += 'Tiene que aceptar los Términos y condiciones'
+
+                    obj_usuario = User(nombre, apellido, sexo, birthday, email, user, contraseña, '', tipoUser)
+                    usr_unique = obj_usuario.unique('usuario', user)
+                    email_unique = obj_usuario.unique('email', email)
+                    
+                    if usr_unique or email_unique: errores += (usr_unique +  " " + email_unique)
+
+                    if not errores:
+                        if obj_usuario.insertar():
+                            mail = welcoming_email(sexo, email, nombre, apellido, user)
+                            if mail: 
+                                flash(mail)
+                                return render_template('Registro.html')
+                            #retornar al login
+                            return redirect(url_for("login"))
+                    else:
+                        flash(errores)
+                        return render_template('Registro.html')
+                    
+                except KeyError or TypeError:                
+                    print("ha ocurrido un error al recibir los datos")
+                    return render_template('Registro.html')
+
+@app.route('/registrar/<string:admin>', methods=['GET', 'POST'])
+@login_requiered
+@admin_required
+def adminregistrar(admin):
+    if request.method == 'GET':
+        return render_template('RegistroAdmin.html', admin=admin)
+    else:
+        if request.form:
+            errores = ""
+            try:
+                nombre = request.form['name']
+                apellido = request.form['surname']
+                sexo = request.form['sex']
+                birthday = request.form['birthday']
+                email = request.form['email']
+                user = request.form['username']
+                contraseña = request.form['password']
+                confirmacion = request.form.get('pconfirmation')
+                tipoUser = request.form['userType']
+
+                # Validaciones dentro del servidor con "utils"
+                if not isPasswordValid(contraseña): errores += 'La contraseña es invalida'
+                elif contraseña != confirmacion: errores += 'Las contraseñas son distintas. Intentelo nuevamente.'
+                if not isEmailValid(email): errores += 'El correo electronico es invalido'
+                
+                obj_usuario = User(nombre, apellido, sexo, birthday, email, user, contraseña, '', tipoUser)
+                usr_unique = obj_usuario.unique('usuario', user)
+                email_unique = obj_usuario.unique('email', email)
+                
+                if usr_unique or email_unique: errores += (usr_unique +  " " + email_unique)
+                if not errores:
+                    if obj_usuario.insertar():
+                        mail = welcoming_email(sexo, email, nombre, apellido, user)
+                        if mail: 
+                            flash(mail)
+                            return render_template('RegistroAdmin.html')
+                        #retornar al login
+                        if obj_usuario.usertype == 'administrador': 
+                            Admins(nombre + ' ' + apellido, user, email).insertar_admin()
+                        if obj_usuario.usertype == 'piloto':
+                            Pilotos(nombre + ' ' + apellido, user, email).insertar_piloto()
+                        return redirect(url_for("home"))
+                else:
+                    flash(errores)
+                    return render_template('RegistroAdmin.html')
+                    
+            except KeyError or TypeError:                
+                print("ha ocurrido un error al recibir los datos")
+                return render_template('RegistroAdmin.html')
+
+@app.route('/información/usuarios/', methods=['GET', 'POST'])
+@login_requiered
+@admin_required
+def ver_usuarios():
+    informacion=User.usuarios_all()
+    if request.method == 'GET':
+        return render_template('VerUsuario.html', informacion=informacion)
+    else:
+        try:
+            nombre = request.form['fullname']
+            usertype = ''
+            if request.form.get('userType'): usertype = request.form['userType']
+
+            obj_user = User(nombre, '', '', '', '', '', '', '', usertype)
+
+            return render_template('VerUsuario.html', informacion=obj_user.ver_usuarios(nombre, usertype))
+        except Error as err:
+            print('Ocurrió un error al momento de buscar el usuario: ' + err)
+
+@app.route('/perfil/<string:user>', methods=['GET'])
+@login_requiered
+@admin_required
+def informacion_admin(user):
+    return render_template('InformacionUsuario.html', item=User.cargar(user))
+
+@app.route('/perfil/', methods=['GET'])
+@login_requiered
+def informacion():
+    return render_template('InformacionUsuario.html', item=User.cargar(g.usuario))
+
+@app.route('/perfil/editar/<string:usuario>', methods=['GET', 'POST'])
+@login_requiered
+def editar_usuario(usuario=None):
+    item = User.cargar(usuario)
+    if request.method  == 'GET':
+        return render_template('EditarUsuario.html', item=item)
+    else:
+        errores = mailerrors = ''
+        try:
+            nombre = request.form['name']
+            apellido = request.form['surname']
+            sexo = request.form['sex']
+            birthday = request.form['birthday']
+            email = request.form['email']
+            user = request.form['username']
+            p_pic = request.files['profile_file']
+
+            if not isEmailValid(email): errores += 'El correo electronico es invalido'
+            
+            if p_pic:
+                picture_file = save_picture(p_pic)
+                if not picture_file:
+                    flash('El archivo debe ser .png, .jpg o .jpeg', 'error')
+                    if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=item.usuario))
+                    return redirect(url_for('informacion'))
+            else: picture_file = "placeholder-square.jpg"
+            
+            obj_usuario = User(nombre, apellido, sexo, birthday, email, user, None, picture_file, None)
+            if item.usuario != user: errores += obj_usuario.unique('usuario', user)
+            
+            if not errores:
+                if obj_usuario.editar(item.usuario):
+                    if item.email != email: mailerrors += editar_mail(email, user) + " "
+                    if item.usuario != user: mailerrors += edit_usuario(email, nombre, apellido, user)
+                    if mailerrors: flash(mailerrors, 'error')
+                    else: flash('El perfil fue editado exitosamente.', 'success')
+                    
+                    if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=item.usuario))
+                    return redirect(url_for('informacion'))
+            
+            flash('Un error ocurrió al momento de editar el perfil. Vuelva a intentarlo', 'error')
+            if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=item.usuario))
+            return redirect(url_for('informacion'))
+
+        except ValueError or TypeError:
+            flash('Un error ocurrió al momento de editar el perfil. Vuelva a intentarlo', 'error')
+            return redirect(url_for('información'))
+
+@app.route('/perfil/borrar/<string:usuario>', methods=['GET', 'POST'])
+@login_requiered
+@admin_required
+def eliminar_usuario(usuario=None):
+    item = User.cargar(usuario)
+    if request.method == 'GET':
+        return render_template('EliminarUser.html', item=item)
+    else:
+        errores = ""
+        try:
+            user = request.form['username']
+            email = request.form['email']
+            password = request.form['password']
+            comentario = request.form['comentario']
+
+            if not isEmailValid(email): errores += 'El correo electronico es invalido'
+
+            obj_admin = User('', '', '', '', '', g.usuario, password, '', '')
+            if obj_admin.autentificar():
+                obj_usuario = User('', '', '', '', email, user, '', '', '')
+                if item.usertype == 'administrador': 
+                    Admins(item.nombre + ' ' + item.apellido, user, email).eliminar_admin()
+                if item.usertype == 'piloto':
+                    Pilotos(item.nombre + ' ' + item.apellido, user, email).eliminar_piloto()
+                
+                obj_delete = Deletes(g.usuario, item.nombre + ' ' + item.apellido, email, comentario)
+
+                obj_delete.insertar_del()
+
+                if obj_usuario.eliminar():
+                    goodbye_mail(email, item.nombre, item.apellido, user)
+                    flash('El perfil fue eliminado exitosamente.', 'success')
+                    return redirect(url_for('ver_usuarios'))
+                
+                flash('Ocurrió un error al momento de eliminar el usuario.', 'error')
+                return redirect(url_for('ver_usuarios'))
+            
+            flash('Ocurrió un error al momento de eliminar el usuario.', 'error')
+            return redirect(url_for('ver_usuarios'))
+        
+        except Error as err:
+            print('Ha ocurrido un error al eliminar el usuario: ' + err)
+
+@app.route('/perfil/vuelos/', methods=['GET', 'POST'])
+@login_requiered
+def ver_vuelos():
+    informacion = Vuelos.vuelos_all()
+    if request.method == 'GET':
+        return render_template('VerVuelos.html', informacion=informacion)
+    else:
+        try:
+            vuelo = request.form['IDVuelo']
+            fecha = request.form['fecha']
+
+            obj_vuelo = Vuelos(vuelo, '', '', '', '', fecha, '', '')
+
+            return render_template('VerVuelos.html', informacion=obj_vuelo.ver_vuelos(vuelo, fecha))
+        except Error as err:
+            print('Ocurrió un error al momento de buscar el vuelo: ' + err)
+
+# Reescribí el código de Santiago para poder trabajr con el y la dinámica de los usuarios
+@app.route('/vuelos/itinerario/<string:piloto>', methods=['GET'])
+@login_requiered
+@user_notrequired
+def ItinerarioVuelo(piloto):
+    try:
+        pilotName = Pilotos.cargar(piloto)
+        vuelos_piloto = Vuelos.buscarItinerario(piloto)
+
+        return render_template('ItinerarioVuelo.html', informacion=vuelos_piloto, pilotName=pilotName.nombre)
+    
+    except Error:
+        print('Ha ocurrido un error al momento de mostrar el itinerario: ' + Error)
+        flash('Ha ocurrio un error con el itinerario', 'error')
+        if g.usertype == 'administrador': return redirect(url_for('informacion', user = pilotName.id))
+        elif g.usertype == 'piloto': return redirect(url_for('informacion'))
+
+@app.route("/cerrarsesion")
+@login_requiered
+def logout():
+    session.clear()
+    return redirect( url_for('login') )
+
+# (Nataly)
 
 @app.route('/AgregarVuelo/', methods=["GET",'POST'])
 def AgregarVuelo():
@@ -71,14 +448,6 @@ def Comentarios():
 def ConsultaVuelos():
     return render_template('ConsultaVuelo.html')
 
-@app.route('/EdicionUsuario/', methods=["GET",'PUT'])
-def EdicionUsuario():
-    return render_template('EdicionUsuario.html')
-
-@app.route('/EditarUsuario/', methods=["GET",'PUT'])
-def EditarUsuario():
-    return render_template('EditarUsuario.html')
-
 @app.route('/EditarVuelo/', methods=["GET",'PUT','POST'])
 def EditarVuelo():
         if request.method == "GET":
@@ -100,47 +469,9 @@ def EditarVuelo():
 
                 return render_template('EditarVuelo.html')
 
-@app.route('/EliminarUser/', methods=["GET",'POST'])
-def EliminarUser():
-    if request.method == "GET":
-        return render_template('EliminarUser.html')
-    else:
-        if request.form:
-            nombreDeUsuario = request.form["userName"]
-            email = request.form["email"]
-            password = request.form["password"]
-            comentario = request.form["comentario"]
-
-            error = ""
-            exito = ""
-
-            if not isUsernameValid(nombreDeUsuario):
-                error+= "Debe escribir un nombre de usuario valido. "
-            
-            if not isEmailValid(email):
-                error += "Debe escribir un email valido. "
-
-            if not isPasswordValid(password):
-                error += "Contraseña Incorrecta"           
-            
-            if not error:                             
-                usuarioBorrado = usuario.eliminarPorValores(nombreDeUsuario, email, password)  
-                if (usuarioBorrado ):                  
-                    yag = yagmail.SMTP("alertaeropuertojuancaseano@gmail.com","Equipo2_alert") 
-                    yag.send(to=email, subject="Alerta usuario eliminado", contents= "El usuario " + nombreDeUsuario + " fue eliminado con exito.") 
-                    return redirect (url_for("HomeAdministrador"))
-                else:
-                    return render_template("EliminarUser.html", errores = "Usuario no encontrado")
-            else:
-                return render_template("EliminarUser.html", errores = error)
-
 @app.route('/EliminarVuelo/', methods=["GET",'DELETE'])
 def EliminarVuelo():
     return render_template('EliminarVuelo.html')
-
-@app.route('/Home/', methods=['GET','POST'])
-def Home():
-    return render_template('Home.html')
 
 @app.route('/HomeAdministrador/', methods=['GET','POST'])
 def HomeAdministrador():
@@ -197,80 +528,9 @@ def InfoPiloto():
 def InfoUser():
     return render_template('InformacionUsuario.html')
 
-@app.route('/ItinerarioVuelo/', methods=['GET'])
-def ItinerarioVuelo():
-    if request.method == "GET":        
-        return render_template('ItinerarioVuelo.html')
-    else:        
-        if request.form:            
-            busquedaCodPiloto = request.form["codPiloto"]            
-            error = ""                       
-
-            if len(busquedaCodPiloto)< 1:
-                error= "Debes ingresar el codigo del piloto"    
-                        
-            if not error:                
-                BusquedaVuelo = vuelo.buscarItinerario(busquedaCodPiloto)
-                print(BusquedaVuelo)               
-                if (BusquedaVuelo):                                                     
-                    return render_template('ItinerarioVuelo.html', lista = BusquedaVuelo) 
-                else:                                       
-                    return render_template('ItinerarioVuelo.html', lista = BusquedaVuelo) 
-            else:                  
-                return render_template('ItinerarioVuelo.html', error = error) 
-            
-@app.route('/Login/', methods=['POST','GET'])
-def Login():
-    if request.method == "GET":
-        return render_template('Login.html')
-    else:
-        usr = request.form["userName"]
-        pwd = request.form["password"]
-
-        obj_usuario = usuario('','','','','',usr,pwd)
-        if obj_usuario.logearse():
-            session.clear()
-            session["nombre_usuario"] = usr
-            return redirect( url_for('HomeUser'))
-        
-        return render_template('Login.html', mensaje="Nombre de usuario o contraseña incorrecta.")    
-
-
 @app.route('/RecuperarContraseña/', methods=["GET",'POST'])
 def RecuperarContraseña():
     return render_template('RecuperarContraseña.html')
-
-@app.route('/RegistroUsuario/', methods=['GET','POST'])
-def RegistroUsuario():
-    if request.method == "GET":
-        #formulario = FormRegistro()
-        return render_template('RegistroUsuario.html')    
-    else: 
-
-        ''' #La forma de hacerlo si tuvieras la validación del formswtf
-        formulario = FormRegistro(request.form)
-        if formulario.validate_on_submit():
-            return render_template('RegistroUsuario.html',mensaje="Registro exitoso.", form=formulario)
-        return render_template('RegistroUsuario.html', mensaje="Registro inválido, compruebe los campos", form=formulario)'''
-        if request.form:
-            nombres = request.form['nombres']
-            apellidos = request.form['apellidos']
-            sexo = request.form['sexo']
-            fecha_nacimiento = request.form['fecha_nacimiento']
-            correo = request.form['correo']
-            usuarioID = request.form['usuarioID']
-            contrasena = request.form['contrasena']
-            #tipoUsuario = request.form['']
-
-            obj_usuario = usuario(nombres, apellidos, sexo, fecha_nacimiento, correo, usuarioID, contrasena)
-            if obj_usuario.insertar():
-                return render_template('RegistroUsuario.html', mensaje="Se registró el usuario exitosamente.")
-
-            return render_template('RegistroUsuario.html', mensaje="Todos los datos son obligatorios.")
-
-@app.route('/RegistroUsuarioAdmin/', methods=['GET','POST'])
-def RegistroUsuarioAdmin():
-    return render_template('RegistroUsuarioSuperAdmin.html')
 
 @app.route('/ReservaVuelo/', methods=['GET','POST'])
 def ReservaVuelo():
