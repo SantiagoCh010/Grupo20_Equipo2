@@ -1,56 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'Template.html' %}
+{% block style %}
     <title>Eliminar Usuario</title>
-    <link rel="icon" type="svg" href="{{url_for('static', filename='icons/Logo.svg')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/EliminarUserStyle.css')}}">
-    <script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
-</head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/EliminarUserStyle.css') }}">
+{% endblock %}
 
-<body>
+{% block main %}
+<main>
+    <img src="{{ url_for('static', filename='icons/userb.svg') }}" alt="user+.svg" class="user"/>
+    <form class="eUsuario" method="POST" action="">
+        <h1>Eliminar Usuario</h1>
+        <div class="form">
+            <label class="ns">
+                <span class="titulo">Usuario:</span>
+                <input type="text" name="username" name="{{ item.usuario }}" value="{{ item.usuario }}">
+            </label>
+            <span class="warning" id="uWarning"></span>
+            <label class="ns">
+                <span class="titulo">Correo Electronico:</span>
+                <input type="email" name="email" name="{{ item.email }}" value="{{ item.email }}">
+            </label>
+            <span class="warning" id="e-Warning"></span>
+            <hr>
+            <label class="ns">
+                <span class="titulo">Contraseña:</span>
+                <input type="password" id="password" name="password" placeholder="Contraseña del Administrador">
+                <img src="{{ url_for('static', filename='icons/eyeO.svg') }}" alt="ver" class="eye" id="peye">
+                <input id="hiPassword" type="hidden" value="{{ url_for('static', filename='icons/eyeC.svg') }}" />
+                </label>
+            <span class="warning" id="pWarning"></span>
+            <label class="ns">
+                <span class="titulo">Motivo de la Eliminación:</span>
+                <textarea class="comentario" name="comentario" placeholder="Indique breve descripción de la eliminación"></textarea>
+            </label>
+        </div>
+        <div class="buttons">
+            <button class="b Eliminar" id="bEliminar">Eliminar</button>
+            <a href="{{ url_for('informacion_admin', user=item.usuario) }}" class="b Atras">Atras</a>
+        </div>
+    </form>
+</main>
+{% endblock %}
 
-    <header class="page-head">
-        <a href="/HomeAdministrador" class="logo">
-            <img src="{{url_for('static', filename='icons/GuapiLogo.svg')}}" alt="Aeropuerto Juan Casiano" height="auto" width="150pt">
-        </a>
-        <nav class="menu">
-            <a href="/HomeAdministrador" class="menu-link"><i class= "fas fa-solid fas fa-home" ></i>Inicio</a>            
-            <a href="/RegistroUsuarioAdmin" class="menu-link"><i class="fas fa-solid fas fa-users"></i>Registrar</a>
-        </nav>
-    </header>
-
-    <main>
-        <img src="{{url_for('static', filename='icons/userb.svg')}}" alt="user+.svg" class="user"/>
-        <form class="eUsuario" method="GET" action="">
-            <h1>Eliminar Usuario</h1>
-            <div class="form">
-                <label class="ns">
-                    <span class="titulo">Usuario:</span>
-                    <input type="text" name="userName">
-                </label>
-                <label class="ns">
-                    <span class="titulo">Correo Electronico:</span>
-                    <input type="email" name="email" placeholder="example@correo.com">
-                </label>
-                <label class="ns">
-                    <span class="titulo">Contraseña:</span>
-                    <input type="password" name="password">
-                </label>
-                <label class="ns">
-                    <span class="titulo">Motivo de la Eliminación:</span>
-                    <textarea class="comentario" placeholder="Indique breve descripción de la eliminación"></textarea>
-                </label>
-            </div>
-            <div class="links">
-                <button class="bBorrar">Eliminar</button>
-                <button class="bAtras">
-                    <a href="/HomeAdministrador" class="bLink">Atras</a>
-                </button>
-            </div>
-        </form>
-    </main>
-</body>
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/EliminarUsuarioScript.js') }}"></script>
+{% endblock %}
