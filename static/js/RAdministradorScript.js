@@ -16,7 +16,6 @@ const eWarning = document.getElementById("e-Warning");
 const uWarning = document.getElementById("uWarning");
 const cWarning = document.getElementById("pWarning");
 const ccWarning = document.getElementById("pcWarning");
-const TCWarning = document.getElementById("TCWarning")
 
 const today = new Date();
 
@@ -74,13 +73,6 @@ bRegistrar.addEventListener("click",function(evt){
     var cValidation = warning_wrongmatches(contraseña, p_regex, cWarning, 'la contraseña', 8, 12);
     var eValidation = warning_matches(email, e_regex, eWarning, 'El correo electrónico');
 
-    if(!this.form.TeC.checked) {
-        TCWarning.textContent = 'Este campo es obligatorio'; 
-        checked = false;
-    } 
-    else {
-        TCWarning.textContent = "";
-    };
     if(contraseña.value != "") { 
         if (confirmarc.value != contraseña.value) {
             ccWarning.textContent = 'Las contraseñas son distintas. Intente nuevamente.';
@@ -97,7 +89,9 @@ bRegistrar.addEventListener("click",function(evt){
     if (registrar == false) {
         evt.preventDefault();
     } else {
-        return true;
+        if (window.confirm('Esta seguro de querer registrar un ' + document.getElementById('userType').value)){
+            return true;   
+        } else { evt.preventDefault(); }
     }
 })
 

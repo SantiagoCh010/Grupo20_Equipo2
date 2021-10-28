@@ -19,7 +19,7 @@ const iaWarning = document.getElementById("capWarning");
 const today = new Date();
 
 var month = today.getUTCMonth() + 1;
-var day = today.getUTCDate();
+var day = today.getDate();
 var year = today.getUTCFullYear();
 date = year + "-" + month + "-" + day;
 
@@ -28,6 +28,7 @@ var minutes = today.getMinutes();
 time = hour + ":" + minutes;
 
 dia.value = date;
+dia.setAttribute("min", date);
 hora.value = time;
 
 function warnings(input, warning) {
