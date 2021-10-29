@@ -4,7 +4,7 @@ from sqlite3 import Error
 
 def conectar():
     try:
-        conn = sqlite3.connect('db/DB.db')
+        conn = sqlite3.connect('bd/DB.db')
         return conn
     except Error as err:
         print("Ocurrió un error al establecer la conexión: " + str(err))
