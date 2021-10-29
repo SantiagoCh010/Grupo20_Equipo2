@@ -101,6 +101,10 @@ def cargar_usuario():
 def home():
     return render_template('Home.html')
 
+@app.route('/Home/')
+def Home():
+    return render_template('Home.html')
+
 @app.route('/ingresar', methods=['GET', 'POST'])
 def login():
     if g.user: return redirect(url_for('home'))
