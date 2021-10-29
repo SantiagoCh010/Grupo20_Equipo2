@@ -47,6 +47,15 @@ class usuario():
         hashed_contrasena = generate_password_hash(pcontrasena, method="pbkdf2:sha256", salt_length=15)
         afectadas = bd.ejecutar_insert(sql, [pusuario, pemail, hashed_contrasena])
         return ( afectadas > 0 )
+    
+    def BuscarRecuperarContrasena(pusuario, pemail):
+        sql = "SELECT * FROM usuario WHERE UsuarioID = ? AND correo =?;"        
+        busqueda = bd.ejecutar_select(sql, [pusuario, pemail])        
+        if busqueda:
+            return busqueda
+            if len(busqueda)>0:
+                return busqueda
+        return None
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un usuario,
     # como cuando un usuario va a actualizar su información (favor verificar estas líneas)
