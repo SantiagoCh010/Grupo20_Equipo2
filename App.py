@@ -530,7 +530,32 @@ def InfoUser():
 
 @app.route('/RecuperarContraseña/', methods=["GET",'POST'])
 def RecuperarContraseña():
-    return render_template('RecuperarContraseña.html')
+    if request.method == "GET":
+        return render_template('RecuperarContraseña.html')        
+    else:
+            nombreDeUsuario = request.form["userName"]
+            email = request.form["email"]
+            error = ""
+
+            if not isUsernameValid(nombreDeUsuario):
+                error+= "Debe escribir un nombre de usuario valido . "
+            
+            if not isEmailValid(email):
+                error += "Debe escribir un email valido . "
+            
+            if not error:
+                contrasenaRecuperada = usuario.BuscarRecuperarContrasena(nombreDeUsuario, email)                
+                if (contrasenaRecuperada ):                     
+                    print()                     
+                    yag = yagmail.SMTP("alertaeropuertojuancaseano@gmail.com","Equipo2_alert") 
+                    yag.send(to=email, subject="Alerta recuperar contraseña",
+                             contents= "Estimado usuario, La contraseña de " + nombreDeUsuario + 
+                             " es "+ contrasenaRecuperada[0]["contrasena"]  ) 
+                    return render_template("RecuperarContraseña.html", errores = "Se ha enviado un correo electronico con su contraseña")
+                else:
+                    return render_template("RecuperarContraseña.html", errores = "Usuario no encontrado")
+            else:
+                return render_template("RecuperarContraseña.html", errores = error)
 
 @app.route('/ReservaVuelo/', methods=['GET','POST'])
 def reservar_vuelo():
