@@ -1,7 +1,7 @@
 import db
 
 class Vuelos():
-    codVuelos = 0
+    codVuelos = ""
     codAvion = 0
     codPiloto = ""
     origen = ""
@@ -50,3 +50,9 @@ class Vuelos():
     def buscarItinerario(codPiloto):
         sql = "SELECT * FROM Vuelos WHERE codPiloto= ?;"      
         return db.ejecutar_select(sql, [codPiloto])
+   
+
+    def eliminar(self):
+        sql = "DELETE FROM Vuelos WHERE codVuelos = ?;"
+        afectadas = db.ejecutar_insert(sql, [ self.codVuelos ])
+        return (afectadas > 0)
