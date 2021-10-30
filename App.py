@@ -1,6 +1,7 @@
 import os
 import functools
 import secrets
+import sqlite3
 
 from flask import Flask, request, g, url_for, flash, session
 from modelos.uModels import User, Deletes, Admins, Pilotos
@@ -11,7 +12,7 @@ from datetime import timedelta
 from sqlite3.dbapi2 import Error
 from modelos.etemplates import *
 from utils import *
-#from forms import FormRegistro
+from forms import *
 from models import *
 
 app = Flask(__name__)
@@ -487,6 +488,18 @@ def Comentarios():
 
 @app.route('/ConsultaVuelos/', methods=['GET'])
 def consultar_vuelos():
+    form = ConsultarVuelo()
+    if request.method == 'GET':
+        codVuelo = form.CodVuelo.data
+        with sqlite3.connect("bd/DB.db") as con:
+            con.row_factory=sqlite3.Row
+            cur = con.cursor()
+            cur.execute("select * from Vuelos where codVuelos = ?", [codVuelo])
+            row = cur.fetchone()
+            if row is None:
+                flash("El vuelo no se encuentra en la base de datos")
+                return render_template('ConsultaVuelo.html', form=form)
+            return render_template('ConsultaVuelo.html', form=form, row=row)
     return render_template('ConsultaVuelo.html')
 
 @app.route('/EditarVuelo/', methods=["GET",'PUT','POST'])
