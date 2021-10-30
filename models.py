@@ -48,13 +48,11 @@ class usuario():
         afectadas = bd.ejecutar_insert(sql, [pusuario, pemail, hashed_contrasena])
         return ( afectadas > 0 )
     
-    def BuscarRecuperarContrasena(pusuario, pemail):
-        sql = "SELECT * FROM usuario WHERE UsuarioID = ? AND correo =?;"        
+       def BuscarRecuperarContrasena(pusuario, pemail):
+        sql = "SELECT * FROM usuario WHERE usuario = ? AND email =?;"
         busqueda = bd.ejecutar_select(sql, [pusuario, pemail])        
-        if busqueda:
-            return busqueda
-            if len(busqueda)>0:
-                return busqueda
+        if busqueda:            
+            return busqueda           
         return None
 
     # Esta función sirve tanto para cuando el SuperAdmin va a modificar un usuario,
