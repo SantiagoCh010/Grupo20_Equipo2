@@ -1,7 +1,7 @@
+from smtplib import SMTPAuthenticationError
 import yagmail as mail
 # Hotmail de la página
-yag = mail.SMTP('aeropuertojctic@outlook.com', 'AeroJuanCasiano2021', 
-            host='smtp.office365.com', port=587, smtp_starttls=True, smtp_ssl=False)
+yag = mail.SMTP('alertaeropuertojuancaseano@gmail.com', 'Equipo2_alert')
 
 def welcoming_email(user_sexo, user_mail, user_name, user_sur, user):
     try:    
@@ -23,7 +23,7 @@ def welcoming_email(user_sexo, user_mail, user_name, user_sur, user):
         
         return ""
     
-    except ValueError or mail.YagAddressError:
+    except ValueError or mail.YagAddressError or SMTPAuthenticationError:
         return "yag no funcionando"
 
 def edit_usuario(user_mail, user_name, user_sur, user):
@@ -41,7 +41,7 @@ def edit_usuario(user_mail, user_name, user_sur, user):
         
         return ""
     
-    except ValueError or mail.YagAddressError:
+    except ValueError or mail.YagAddressError or SMTPAuthenticationError:
         return "yag no funcionando"
 
 def editar_mail(user_mail, user):
@@ -59,7 +59,26 @@ def editar_mail(user_mail, user):
         
         return ""
     
-    except ValueError or mail.YagAddressError:
+    except ValueError or mail.YagAddressError or SMTPAuthenticationError:
+        return "yag no funcionando"
+
+def edit_contraseña(user_mail, user, user_pwd):
+    try:    
+        # Se envía un correo al usuario informandole de la eliminación de este en la página
+        yag.send(
+            to=user_mail, 
+            subject= "Recuperar Contraseña", 
+            contents='''Hola {0},
+                
+                ¿Se te olvidó tu contraseña?
+                Tu contraseña temporal es: {1}.
+                Recuerda cambiarla lo más antes posible.
+                
+                Aeropuerto Juan Casiano.'''.format(user, user_pwd))
+        
+        return ""
+    
+    except ValueError or mail.YagAddressError or SMTPAuthenticationError:
         return "yag no funcionando"
 
 def goodbye_mail(user_mail, user_name, user_sur, user):
@@ -77,5 +96,5 @@ def goodbye_mail(user_mail, user_name, user_sur, user):
         
         return ""
     
-    except ValueError or mail.YagAddressError:
+    except ValueError or mail.YagAddressError or SMTPAuthenticationError:
         return "yag no funcionando"
