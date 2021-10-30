@@ -64,6 +64,17 @@ class FormRegistroAdminsitrado(FlaskForm):
     Contrasena = PasswordField('Contraseña', validators=[validators.required(), validators.length(max=16, min=8)])
     confirmarContrasena = PasswordField('Validar Contraseña', validators=[validators.required(), validators.length(max=16, min=8)])
     enviar = SubmitField('Registrar')
+    
+class ConsultarVuelo(FlaskForm): 
+    CodVuelo = IntegerField('Código de vuelo', validators=[validators.required(), validators.length(max=3)]) 
+    CodAvion = IntegerField('Código del avión', validators=[validators.required(), validators.length(max=4)])
+    CodPiloto = IntegerField('Código del piloto', validators=[validators.required(), validators.length(max=15)])
+    CiudadOrigen = StringField('Ciudad de Origen', validators=[validators.required(), validators.length(max=20)])
+    CiudadDestino = StringField('Ciudad de Destino', validators=[validators.required(), validators.length(max=20)])
+    FechaVuelo = StringField('Fecha de vuelo',validators=[validators.required(), validators.regexp("^(0[1-9]|[12][0-9]|3[01])[- /.]")])
+    HoraVuelo = StringField('Hora de vuelo', validators=[validators.required(), validators.length(max=12)])
+    consultar = SubmitField('Consultar', render_kw={"onmouseover":"consultar_vuelos()"})
+    estado = StringField('Estado', validators=[validators.required(), validators.length(max=20)]) 
 
 
 '''
