@@ -9,7 +9,7 @@
     <form class="reservarVuelo" method="POST" action="{{ url_for('ver_vuelos') }}">
         <h2><i class="fas fa-plane-departure"></i> Ver Vuelos</h2>
         {% if g.usertype == "administrador" %}
-            <a href="" class="h2">¿Quiere agregar un vuelo?</a>
+            <a href="{{ url_for('AgregarVuelo') }}" class="h2">¿Quiere agregar un vuelo?</a>
         {% endif %}
             <div class="form">
             <label class="reservar code">
@@ -77,13 +77,13 @@
             </a>
             {% if g.usertype == "administrador" %}
                 <div class="secciones links">
-                    <a href="" class="b Editar">Editar</a>
-                    <a href="" class="b Eliminar">Eliminar</a>
+                    <a href="{{ url_for('EditarVuelo') }}" class="b Editar">Editar</a>
+                    <a href="{{ url_for('EliminarVuelo') }}" class="b Eliminar">Eliminar</a>
                 </div>
             {% endif %}
             {% if g.usertype == "usuario" %}
                 <div class="secciones links">
-                    <a href="" class="b Comentar">Comentar</a>
+                    <a href="{{ url_for('Comentarios') }}" class="b Comentar">Comentar</a>
                 </div>
             {% endif %}
         </div>
@@ -97,3 +97,4 @@
 
 {% block scripts %}
 {% endblock %}
+
