@@ -112,24 +112,26 @@ def cargar_usuario():
 def home():
     if request.method == 'GET':
         return render_template('Home.html')
-    else:
-        try:
-            origen = request.form['origen'].replace(",", "")
-            destino = request.form['destino'].replace(",", "")
-            fecha = request.form['fecha']
-            personas = request.form['persona']
+    # Una propuesta para llevar la información que el usuario proporcionará en el home
+    # a la página de reservar vuelos
+    # else:
+        # try:
+            # origen = request.form['origen'].replace(",", "")
+            # destino = request.form['destino'].replace(",", "")
+            # fecha = request.form['fecha']
+            # personas = request.form['persona']
 
-            obj_vuelo = Vuelos('', '', '', origen, destino, fecha, '', '')
-            info = origen + ',' + destino + ',' + fecha + ',' + personas
+            # obj_vuelo = Vuelos('', '', '', origen, destino, fecha, '', '')
+            # info = origen + ',' + destino + ',' + fecha + ',' + personas
             
-            if obj_vuelo.autentificar_vuelo():
-                flash('Recuerde que al Reservar el vuelo, solo reserva su cupo. Mas no, su compra.', 'success')
-                return redirect(url_for('reservar_vuelo', reservar=info))
-        except Error as err:
-            print('Ha ocurrido un error al reservar desde el inicio: ' + err)    
-            flash('No se encontró ningún vuelo con esas características.', 'error')
-            flash('Recuerde que al Reservar el vuelo, solo reserva su cupo. Mas no, su compra.', 'success')
-            return redirect(url_for('reservar_vuelo', reservar=info))
+            # if obj_vuelo.autentificar_vuelo():
+                # flash('Recuerde que al Reservar el vuelo, solo reserva su cupo. Mas no, su compra.', 'success')
+                # return redirect(url_for('reservar_vuelo', reservar=info))
+        # except Error as err:
+            # print('Ha ocurrido un error al reservar desde el inicio: ' + err)    
+            # flash('No se encontró ningún vuelo con esas características.', 'error')
+            # flash('Recuerde que al Reservar el vuelo, solo reserva su cupo. Mas no, su compra.', 'success')
+            # return redirect(url_for('reservar_vuelo', reservar=info))
 
 @app.route('/ingresar', methods=['GET', 'POST'])
 def login():
