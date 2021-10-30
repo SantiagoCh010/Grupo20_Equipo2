@@ -317,7 +317,7 @@ class vuelo():
         
      #Para buscar desde el panel de administrador
     def buscarPorHome(pciudadOrigen, pciudadDestino, pfechaVuelo):
-        sql = "SELECT * FROM vuelos WHERE ciudad_origen = ? AND ciudad_destino = ? AND fecha_vuelo = ?;"
+        sql = "SELECT * FROM vuelos WHERE ciudadOrigen = ? AND ciudadDestino = ? AND fechaVuelo = ?;"
         busqueda = bd.ejecutar_select(sql, [pciudadOrigen, pciudadDestino, pfechaVuelo])        
         if busqueda:
             return busqueda
