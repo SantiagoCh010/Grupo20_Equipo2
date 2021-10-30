@@ -83,22 +83,20 @@
                         </tr>
                         {% for item in lista %}
                             <tr>
-                                <td>{{ item.cod_vuelo}}</td>
-                                <td>{{ item.cod_avion}}</td>
-                                <td>{{ item.cod_piloto}}</td>
-                                <td>{{ item.ciudad_origen}}</td>
-                                <td>{{ item.ciudad_destino}}</td>
-                                <td>{{ item.fecha_vuelo}}</td>
-                                <td>{{ item.hora_vuelo}}</td>
+                                <td>{{ item.codVuelos}}</td>
+                                <td>{{ item.codAvion}}</td>
+                                <td>{{ item.codPiloto}}</td>
+                                <td>{{ item.ciudadOrigen}}</td>
+                                <td>{{ item.ciudadDestino}}</td>
+                                <td>{{ item.fechaVuelo}}</td>
+                                <td>{{ item.horaVuelo}}</td>
                                 <td>{{ item.estado}}</td>    
                                <td><a href="">Reservar</a></td>         
                             </tr>
                         {% endfor %}
-                    </table>
-               </div>   
-            {% else %} 
-               <h2 style="color: red;">Vuelos no encontrados</h2>
-            {% endif %}
+                    </table>            
+               </div>            
+            {% endif %}     
 
             {% if error %}
                 <h2 style="color: red;">{{error}}</h2>
