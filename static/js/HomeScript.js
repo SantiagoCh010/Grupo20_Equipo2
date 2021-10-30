@@ -35,7 +35,6 @@ function warnings(input, warning) {
 
 bBuscar.addEventListener("click", function(evt){
     var reservar = false;
-    evt.preventDefault();
 
     var oWarning = warnings(origen, lOrigen);
     var dWarning = warnings(destino, lDestino);
@@ -46,7 +45,6 @@ bBuscar.addEventListener("click", function(evt){
     if (reservar == false) {
         evt.preventDefault();
     } else {
-        window.location.replace(document.getElementById('url').value)
+        return true;
     }
 })
-
