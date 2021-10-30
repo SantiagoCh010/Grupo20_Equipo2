@@ -479,11 +479,9 @@ def EliminarVuelo():
 
 @app.route('/HomeAdministrador/', methods=['GET','POST'])
 def HomeAdministrador():
-    if request.method == "GET":
-        print("1")
+    if request.method == "GET":        
         return render_template('HomeAdministradorLogueado.html')
-    else:
-        print("2")
+    else:        
         if request.form:            
             busquedaOrigen = request.form["BsOrigen"]
             busquedaDestino = request.form["BsDestino"]
@@ -491,10 +489,10 @@ def HomeAdministrador():
             busquedaNumeroPersonas = request.form["BsPersona"]
             error = ""                       
 
-            if len(busquedaOrigen)< 4:
+            if len(busquedaOrigen)< 2:
                 error= "-Debe escribir un lugar de origen valido- "
             
-            if len(busquedaDestino)<4:
+            if len(busquedaDestino)<2:
                 error += "-Debe escribir un lugar de destino valido- "
             
             if len(busquedaFecha)<2:
@@ -504,17 +502,14 @@ def HomeAdministrador():
                 error +="-El numero de personas debe ser mayor de cero- "
             
             if not error:                
-                BusquedaVuelo = vuelo.buscarPorHome(busquedaOrigen, busquedaDestino, busquedaFecha) 
-                print(BusquedaVuelo)               
-                if (BusquedaVuelo):    
-                    print("Vuelos encontrados")                                  
+                BusquedaVuelo = vuelo.buscarPorHome(busquedaOrigen, busquedaDestino, busquedaFecha)                             
+                if (BusquedaVuelo):                                                    
                     return render_template('HomeAdministradorLogueado.html', lista = BusquedaVuelo) 
-                else:
-                    print("Vuelos no encontrados")                    
-                    return render_template('HomeAdministradorLogueado.html', lista = BusquedaVuelo) 
-            else:
-                print(error)   
+                else:                                        
+                    return render_template('HomeAdministradorLogueado.html', error= "Vuelos no encontrados") 
+            else:                   
                 return render_template('HomeAdministradorLogueado.html', error = error)  
+            
 
 @app.route('/HomePiloto/', methods=['GET','POST'])
 def HomePiloto():
