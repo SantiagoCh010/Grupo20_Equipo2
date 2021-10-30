@@ -7,7 +7,7 @@
 {% block main %}
 <main>
     <img src="{{ url_for('static', filename='icons/user+.svg') }}" alt="user+.svg" class="user"/>
-    <form class="logUsuario" method="POST" action="">
+    <form class="logUsuario" method="POST" action="{{ url_for('login') }}">
         <h1>Ingresar</h1>
         <div class="form">
             {% with warnings = get_flashed_messages() %}
@@ -35,12 +35,12 @@
             <label for="rememberMe" class="check">Recordar Usuario</label>
         </div>
         <div class="links">
-            <a href="RecuperarContrasena.html" class="log-link">¿Olvidaste Tu Contraseña?</a>
+            <a href="{{ url_for('RecuperarContraseña') }}" class="log-link">¿Olvidaste Tu Contraseña?</a>
             <button class="bLogin" id="bLogin" type="submit">Ingresar</button>
             <div class="bellow">
-                <a href="RegistroUsuario.html" class="log-link">No Estoy Registrado</a>
+                <a href="{{ url_for('registrar') }}" class="log-link">No Estoy Registrado</a>
                 <button class="bAtras">
-                    <a href="Home.html" class="bLink">Atras</a>
+                    <a href="{{ url_for('home') }}" class="bLink">Atras</a>
                 </button>
             </div>
         </div>
