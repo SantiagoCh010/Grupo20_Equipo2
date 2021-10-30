@@ -62,6 +62,17 @@ def user_notrequired(view):
     
     return wrapped_view
 
+# El piloto no puede utilizar esta ruta
+def pilot_notrequired(view):
+    @functools.wraps(view)
+    def wrapped_view(**kargs):
+        if g.usertype == "piloto":
+            return redirect( url_for('home') )
+        
+        return view(**kargs)
+    
+    return wrapped_view
+
 # Función para guardar la imagen de perfil
 def save_picture(profile_pic):
     try:
@@ -97,13 +108,28 @@ def cargar_usuario():
                 g.usertype = i["usertype"]
                 g.image = i["img_profile"]
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('Home.html')
+    if request.method == 'GET':
+        return render_template('Home.html')
+    else:
+        try:
+            origen = request.form['origen'].replace(",", "")
+            destino = request.form['destino'].replace(",", "")
+            fecha = request.form['fecha']
+            personas = request.form['persona']
 
-@app.route('/Home/')
-def Home():
-    return render_template('Home.html')
+            obj_vuelo = Vuelos('', '', '', origen, destino, fecha, '', '')
+            info = origen + ',' + destino + ',' + fecha + ',' + personas
+            
+            if obj_vuelo.autentificar_vuelo():
+                flash('Recuerde que al Reservar el vuelo, solo reserva su cupo. Mas no, su compra.', 'success')
+                return redirect(url_for('reservar_vuelo', reservar=info))
+        except Error as err:
+            print('Ha ocurrido un error al reservar desde el inicio: ' + err)    
+            flash('No se encontró ningún vuelo con esas características.', 'error')
+            flash('Recuerde que al Reservar el vuelo, solo reserva su cupo. Mas no, su compra.', 'success')
+            return redirect(url_for('reservar_vuelo', reservar=info))
 
 @app.route('/ingresar', methods=['GET', 'POST'])
 def login():
@@ -262,6 +288,7 @@ def informacion():
 
 @app.route('/perfil/editar/<string:usuario>', methods=['GET', 'POST'])
 @login_requiered
+@pilot_notrequired
 def editar_usuario(usuario=None):
     item = User.cargar(usuario)
     if request.method  == 'GET':
@@ -291,14 +318,14 @@ def editar_usuario(usuario=None):
             if item.usuario != user: errores += obj_usuario.unique('usuario', user)
             
             if not errores:
-                if obj_usuario.editar(item.usuario):
-                    if item.email != email: mailerrors += editar_mail(email, user) + " "
-                    if item.usuario != user: mailerrors += edit_usuario(email, nombre, apellido, user)
-                    if mailerrors: flash(mailerrors, 'error')
-                    else: flash('El perfil fue editado exitosamente.', 'success')
-                    
-                    if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=item.usuario))
-                    return redirect(url_for('informacion'))
+                if item.email != email: mailerrors += editar_mail(email, user) + " "
+                if item.usuario != user: mailerrors += edit_usuario(email, nombre, apellido, user)
+                if mailerrors: flash(mailerrors, 'error')
+                else:
+                    if obj_usuario.editar(item.usuario):
+                        flash('El perfil fue editado exitosamente.', 'success')
+                        if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=item.usuario))
+                        return redirect(url_for('informacion'))
             
             flash('Un error ocurrió al momento de editar el perfil. Vuelva a intentarlo', 'error')
             if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=item.usuario))
@@ -394,6 +421,8 @@ def logout():
 # (Nataly)
 
 @app.route('/AgregarVuelo/', methods=["GET",'POST'])
+@login_requiered
+@admin_required
 def AgregarVuelo():
         if request.method == "GET":
         #formulario = FormRegistro()
@@ -416,6 +445,8 @@ def AgregarVuelo():
                 return render_template('AgregarVuelo.html', mensaje="Todos los datos son obligatorios.")
     
 @app.route('/CambiarContraseña/', methods=["GET",'PUT', 'POST'])
+@login_requiered
+@pilot_notrequired
 def CambContraseña():
     if request.method == "GET":
         return render_template('CambiarContraseña.html')    
@@ -423,13 +454,17 @@ def CambContraseña():
         if request.form:
             usuarioID = request.form['usuarioID']
             contrasena = request.form['password']
-            obj_usuario = usuario('','','','','',usuarioID,contrasena)
-            if obj_usuario.logearse():
+            obj_usuario = User('','','','','',usuarioID,contrasena, '', '')
+            if obj_usuario.autentificar():
                 nuevaContrasena = request.form['nueva']
-                if obj_usuario.modificarContra(usuarioID, nuevaContrasena):
-                    return render_template('HomeUsuarioLogueado.html')
+                if obj_usuario.editar_pword(nuevaContrasena):
+                    flash('Tu contraseña ha sido cambiada.', 'success')
+                    if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=usuarioID))
+                    return redirect(url_for('informacion'))
 
-            return render_template('HomeUsuarioLogueado.html')
+            flash('Un error ocurrió al momento de editar el perfil. Vuelva a intentarlo', 'error')
+            if g.usertype == 'administrador': return redirect(url_for('informacion_admin', user=usuarioID))
+            return redirect(url_for('informacion'))
 
 @app.route('/Comentarios/', methods=["GET", "POST"])
 def Comentarios():
@@ -453,6 +488,8 @@ def consultar_vuelos():
     return render_template('ConsultaVuelo.html')
 
 @app.route('/EditarVuelo/', methods=["GET",'PUT','POST'])
+@login_requiered
+@admin_required
 def EditarVuelo():
         if request.method == "GET":
             return render_template('EditarVuelo.html')    
@@ -474,6 +511,8 @@ def EditarVuelo():
                 return render_template('EditarVuelo.html')
 
 @app.route('/EliminarVuelo/', methods=["GET",'DELETE'])
+@login_requiered
+@admin_required
 def EliminarVuelo():
     return render_template('EliminarVuelo.html')
 
@@ -529,32 +568,34 @@ def InfoUser():
 
 @app.route('/RecuperarContraseña/', methods=["GET",'POST'])
 def RecuperarContraseña():
+    error = ""
     if request.method == "GET":
         return render_template('RecuperarContraseña.html')        
     else:
-            nombreDeUsuario = request.form["userName"]
+        try:
+            usuario = request.form["userName"]
             email = request.form["email"]
-            error = ""
 
-            if not isUsernameValid(nombreDeUsuario):
-                error+= "Debe escribir un nombre de usuario valido . "
-            
-            if not isEmailValid(email):
-                error += "Debe escribir un email valido . "
+            if not isEmailValid(email): error += "Debe escribir un email valido."
+
+            obj_usuario = User('', '', '', '', '', usuario, '', '', '')
+            usr_unique = obj_usuario.unique('usuario', usuario)
+            email_unique = obj_usuario.unique('email', email)
+
+            if not usr_unique and not email_unique: error += 'Usuario no encontrado'
             
             if not error:
-                contrasenaRecuperada = usuario.BuscarRecuperarContrasena(nombreDeUsuario, email)                
-                if (contrasenaRecuperada ):                     
-                    print()                     
-                    yag = yagmail.SMTP("alertaeropuertojuancaseano@gmail.com","Equipo2_alert") 
-                    yag.send(to=email, subject="Alerta recuperar contraseña",
-                             contents= "Estimado usuario, La contraseña de " + nombreDeUsuario + 
-                             " es "+ contrasenaRecuperada[0]["contrasena"]  ) 
-                    return render_template("RecuperarContraseña.html", errores = "Se ha enviado un correo electronico con su contraseña")
-                else:
-                    return render_template("RecuperarContraseña.html", errores = "Usuario no encontrado")
-            else:
-                return render_template("RecuperarContraseña.html", errores = error)
+                pwd_temporal = 'R' + secrets.token_hex(4)
+                if edit_contraseña(email, usuario, pwd_temporal):
+                    flash('Ha surgido un problema al recuperar tu contraseña. Vuelve a Intentarlo', 'error')
+                    return redirect(url_for('login'))
+                if obj_usuario.editar_pword(pwd_temporal):
+                    flash('Tu contraseña temporal ha sido enviada a tu correo.', 'success')
+                    return redirect(url_for('login'))
+
+        except Error:
+            flash('Ha surgido un problema al recuperar tu contraseña. Vuelve a Intentarlo', 'error')
+            return redirect(url_for('login'))
 
 @app.route('/ReservaVuelo/', methods=['GET','POST'])
 def reservar_vuelo():
