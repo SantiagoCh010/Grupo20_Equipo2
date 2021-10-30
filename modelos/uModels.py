@@ -66,6 +66,13 @@ class User():
         afectadas = db.ejecutar_insert(sql, [self.nombre, self.apellido, self.sexo, self.fecha_nacimiento,
         self.email, self.usuario, self.img_profile, usuario])
         return ( afectadas > 0 )
+    
+    def editar_pword(self, contrasena):
+        sql = '''UPDATE Usuario SET usuario = ?, contrasena = ? WHERE usuario = ?'''
+        hashed_pwd = generate_password_hash(contrasena, method='pbkdf2:sha256', salt_length=15)
+
+        afectadas = db.ejecutar_insert(sql, [self.usuario, hashed_pwd, self.usuario])
+        return ( afectadas > 0 )
 
     @staticmethod
     def info_usuario(usuario):
