@@ -48,7 +48,7 @@ class usuario():
         afectadas = bd.ejecutar_insert(sql, [pusuario, pemail, hashed_contrasena])
         return ( afectadas > 0 )
     
-       def BuscarRecuperarContrasena(pusuario, pemail):
+    def BuscarRecuperarContrasena(pusuario, pemail):
         sql = "SELECT * FROM usuario WHERE usuario = ? AND email =?;"
         busqueda = bd.ejecutar_select(sql, [pusuario, pemail])        
         if busqueda:            
